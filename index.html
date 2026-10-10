@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipes</title>
+  <title>Paul's Recipes</title>
   <style>
      body { 
        background-color: #cbbaa7; 
@@ -56,37 +56,54 @@
        opacity: 0.85;
      }
 
-     .top-bar {
+     /* Polished Header Layout */
+     .header-nav {
        display: flex;
        justify-content: space-between;
        align-items: center;
-       margin-bottom: 15px;
+       flex-wrap: wrap;
+       gap: 10px;
+       margin-bottom: 20px;
+       padding-bottom: 15px;
+       border-bottom: 1px dashed #d4c4b2;
+     }
+
+     .action-group {
+       display: flex;
+       gap: 8px;
+       flex-wrap: wrap;
      }
 
      .action-btn {
        background: #e4d7c4;
        border: 1px solid #c8b9a6;
-       color: #6d421d;
+       color: #5a381a;
        padding: 6px 12px;
        font-family: inherit;
-       font-size: 0.85em;
+       font-size: 0.8em;
        cursor: pointer;
-       border-radius: 3px;
-       transition: background 0.2s;
+       border-radius: 4px;
+       transition: all 0.2s;
+       font-weight: bold;
+     }
+     .action-btn:hover {
+       background: #d4c4b2;
      }
      .action-btn.active {
-       background: #6d421d;
+       background: #5a381a;
        color: #f6efe2;
      }
 
      h1 { 
        text-align: center; 
        border-bottom: 2px solid #2b221a; 
-       padding-bottom: 12px; 
+       padding-bottom: 15px; 
        font-weight: normal; 
-       font-size: 2.2em; 
-       margin-top: 0; 
+       font-size: 2.4em; 
+       margin-top: 5px; 
+       margin-bottom: 20px;
        font-style: italic;
+       letter-spacing: 1px;
      }
 
      h2 { 
@@ -102,7 +119,7 @@
        display: flex;
        flex-wrap: wrap;
        gap: 6px;
-       margin-bottom: 15px;
+       margin-bottom: 20px;
        justify-content: center;
        align-items: center;
      }
@@ -149,21 +166,23 @@
        display: flex; 
        gap: 10px; 
        margin-bottom: 20px;
+       background: rgba(228, 215, 196, 0.3);
+       padding: 8px 12px;
+       border: 1px solid #d4c4b2;
+       border-radius: 4px;
+       align-items: center;
      }
      input { 
        width: 100%; 
        background: transparent; 
        border: none; 
-       border-bottom: 1px solid #4e3f31; 
        color: #2b221a; 
-       padding: 8px 0; 
+       padding: 4px 0; 
        font-family: inherit; 
        font-size: 1.05em; 
        outline: none; 
-       box-sizing: border-box;
      }
-     input:focus { border-bottom: 2px solid #6d421d; }
-     input::placeholder { color: #7a6a59; font-style: italic; }
+     input::placeholder { color: #8c7a69; font-style: italic; }
      
      .recipe { margin-bottom: 40px; }
      .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43, 34, 26, 0.1); padding-bottom: 8px; margin-bottom: 12px; }
@@ -198,15 +217,21 @@
 </head>
 <body>
   <div class="book" id="top">
-    <div class="top-bar">
-      <button class="action-btn" onclick="dealRandomRecipe()">Recipe Roulette</button>
-      <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
+    <div class="header-nav">
+      <div class="action-group">
+        <button class="action-btn" onclick="dealRandomRecipe(false)">Dealer's Choice</button>
+        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
+      </div>
+      <div class="action-group">
+        <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
+      </div>
     </div>
-    <h1>These are recipes</h1>
+
+    <h1>Paul's Recipes</h1>
     
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
-      <button class="action-btn" onclick="resetMatrix()" style="white-space: nowrap;">Reset</button>
+      <button class="action-btn" onclick="resetMatrix()" style="background: #d4c4b2;">Reset</button>
     </div>
     
     <div class="pantry-bar" id="pantry-bar">
@@ -222,7 +247,7 @@
   <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
   <script>
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
+    const CSV_URL = "YOUR_PUBLISHED_CSV_URL_HERE";
     let db = [];
     let wakeLock = null;
     let selectedPantry = [];
@@ -248,8 +273,8 @@
     function generatePantryChips() {
       const curatedPantry = [
         'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
-        'beef', 'spinach', 'chicken', 'noodles', 'rice', 
-        'mice', 'passata', 'eggs'
+        'chorizo', 'spinach', 'pasta', 'noodles', 'rice', 
+        'coconut milk', 'passata', 'eggs'
       ];
 
       const container = document.getElementById('pantry-chips-container');
@@ -271,9 +296,12 @@
       render();
     }
 
-function dealRandomRecipe() {
+    function dealRandomRecipe(bangersOnly) {
       if (db.length === 0) return;
-      const random = db[Math.floor(Math.random() * db.length)];
+      let pool = bangersOnly ? db.filter(r => r.rating >= 4) : db;
+      if (pool.length === 0) pool = db; // fallback if no 4+ star rated recipes exist yet
+      
+      const random = pool[Math.floor(Math.random() * pool.length)];
       
       document.getElementById('search').value = random.name;
       selectedPantry = [];
@@ -395,7 +423,7 @@ function dealRandomRecipe() {
       if (query === '' && selectedPantry.length === 0) {
         tocContainer.innerHTML = `
           <div class="toc">
-            <h3>MENU</h3>
+            <h3>Table of Contents</h3>
             <div class="toc-grid">
               ${categories.map(cat => `
                 <div>
