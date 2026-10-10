@@ -56,7 +56,6 @@
        opacity: 0.85;
      }
 
-     /* Polished Header Layout */
      .header-nav {
        display: flex;
        justify-content: space-between;
@@ -227,7 +226,7 @@
       </div>
     </div>
 
-    <h1>These are recipes</h1>
+    <h1>Paul's Recipes</h1>
     
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
@@ -299,7 +298,7 @@
     function dealRandomRecipe(bangersOnly) {
       if (db.length === 0) return;
       let pool = bangersOnly ? db.filter(r => r.rating >= 4) : db;
-      if (pool.length === 0) pool = db; // fallback if no 4+ star rated recipes exist yet
+      if (pool.length === 0) pool = db;
       
       const random = pool[Math.floor(Math.random() * pool.length)];
       
@@ -333,7 +332,7 @@
     }
 
     function parseCSV(text) {
-      let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+      let p = '', row = [''], ret = [row], s = !0, l;
       for (l of text) {
         if ('"' === l) {
           s = !s;
@@ -452,7 +451,7 @@
                           ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
                       </div>
                   </div>
-                  ${r.tags.length > 0 ? `<div class="recipe-tags">Tags: ${r.tags.join(', ')}</div>` : ''}
+                  ${r.tags && r.tags.length > 0 && r.tags[0] !== "" ? `<div class="recipe-tags">Tags: ${r.tags.join(', ')}</div>` : ''}
                   <div class="ingredients-list">
                       <strong>Ingredients:</strong>
                       <ul>
