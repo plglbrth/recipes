@@ -422,17 +422,16 @@
         .then(csvText => {
           const rows = parseCSV(csvText);
           db = [];
-          for (let i = 1; i < rows.length; i++) {
+        for (let i = 1; i < rows.length; i++) {
             const cols = rows[i];
-            if (cols.length >= 6 && cols[1]) {
+            if (cols.length >= 5 && cols[1]) {
               db.push({
                 id: cols[0],
                 name: cols[1],
                 ingredients: cols[2] ? cols[2].split("|").map(x => x.trim()) : [],
                 method: cols[3] || '',
                 rating: parseInt(cols[4]) || 0,
-                category: cols[5] || 'Uncategorized',
-                tags: cols[6] ? cols[6].split(",").map(t => t.trim()) : []
+                category: cols[5] || 'Uncategorized'
               });
             }
           }
@@ -516,7 +515,6 @@
                           ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
                       </div>
                   </div>
-                  ${r.tags && r.tags.length > 0 && r.tags[0] !== "" ? `<div class="recipe-tags">Tags: ${r.tags.join(', ')}</div>` : ''}
                   <div class="ingredients-list">
                       <strong>Ingredients:</strong>
                       <ul>
