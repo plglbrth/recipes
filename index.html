@@ -218,16 +218,16 @@
   <div class="book" id="top">
     <div class="header-nav">
       <div class="action-group">
-        <button class="action-btn" onclick="dealRandomRecipe(false)">Dealer's Choice</button>
-        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
         <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
+        <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
+        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
       </div>
       <div class="action-group">
         <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
       </div>
     </div>
 
-    <h1>Paul's Recipes</h1>
+    <h1>Paul's Recipes (for cooking)</h1>
     
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
