@@ -1,225 +1,445 @@
-<script>
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
-  let db = [];
-  let wakeLock = null;
-  let selectedPantry = [];
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techically these are "recipes"</title>
+  <style>
+     body { 
+       background-color: #cbbaa7; 
+       background-image: 
+         radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.15) 1px, transparent 150px),
+         radial-gradient(circle at 75% 60%, rgba(90, 55, 30, 0.15) 1px, transparent 120px),
+         radial-gradient(circle at 10% 85%, rgba(0,0,0,0.08) 2px, transparent 200px);
+       color: #2b221a; 
+       font-family: 'Georgia', serif; 
+       padding: 12px; 
+       line-height: 1.6; 
+       box-sizing: border-box;
+     }
+     
+     .book { 
+       max-width: 800px; 
+       margin: 0 auto; 
+       background-color: #f6efe2; 
+       background-image: 
+         radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 8px),
+         radial-gradient(circle at 80% 25%, transparent 40px, rgba(100, 60, 30, 0.25) 41px, rgba(100, 60, 30, 0.12) 43px, transparent 48px),
+         radial-gradient(circle at 81.5% 24.5%, rgba(100, 60, 30, 0.3) 1px, transparent 12px),
+         radial-gradient(circle at 35% 72%, transparent 35px, rgba(90, 48, 20, 0.2) 36px, rgba(90, 48, 20, 0.08) 38px, transparent 42px),
+         radial-gradient(ellipse at 88% 70%, rgba(90, 48, 20, 0.12) 0%, rgba(90, 48, 20, 0.08) 40%, transparent 70%),
+         radial-gradient(circle at 0% 0%, rgba(90, 48, 20, 0.15) 0%, transparent 30%),
+         radial-gradient(circle at 100% 100%, rgba(70, 40, 15, 0.15) 0%, transparent 40%),
+         radial-gradient(ellipse at center, transparent 30%, rgba(90, 48, 20, 0.15) 100%);
+       padding: 20px; 
+       box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 0 40px rgba(90, 50, 20, 0.08); 
+       border-radius: 4px; 
+       border-left: 8px solid #5a381a; 
+       position: relative;
+       box-sizing: border-box;
+     }
 
-  async function toggleWakeLock() {
-    const btn = document.getElementById('wakeLockBtn');
-    if ('wakeLock' in navigator) {
-      try {
-        if (wakeLock === null) {
-          wakeLock = await navigator.wakeLock.request('screen');
-          btn.textContent = 'Keep Awake: ON';
-          btn.classList.add('active');
-        } else {
-          await wakeLock.release();
-          wakeLock = null;
-          btn.textContent = 'Keep Awake: OFF';
-          btn.classList.remove('active');
-        }
-      } catch (err) {}
-    }
-  }
+     @media (min-width: 600px) {
+       body { padding: 25px; }
+       .book { padding: 45px; border-left-width: 12px; }
+     }
+     
+     .book::after {
+       content: "";
+       position: absolute;
+       top: 0; left: 0; right: 0; bottom: 0;
+       pointer-events: none;
+       background-image:
+         radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 2px),
+         radial-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
+       background-size: 140px 170px, 83px 97px;
+       opacity: 0.85;
+     }
 
-  function generatePantryChips() {
-    const curatedPantry = [
-      'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
-      'chorizo', 'spinach', 'pasta', 'noodles', 'rice', 
-      'coconut milk', 'passata', 'eggs'
-    ];
+     .top-bar {
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       margin-bottom: 15px;
+     }
 
-    const container = document.getElementById('pantry-chips-container');
-    container.innerHTML = curatedPantry.map(item => `
-      <span class="pantry-chip ${selectedPantry.includes(item) ? 'selected' : ''}" onclick="togglePantry('${item}')">
-        ${item.charAt(0).toUpperCase() + item.slice(1)}
-      </span>
-    `).join('');
-  }
+     .action-btn {
+       background: #e4d7c4;
+       border: 1px solid #c8b9a6;
+       color: #6d421d;
+       padding: 6px 12px;
+       font-family: inherit;
+       font-size: 0.85em;
+       cursor: pointer;
+       border-radius: 3px;
+       transition: background 0.2s;
+     }
+     .action-btn.active {
+       background: #6d421d;
+       color: #f6efe2;
+     }
 
-  function togglePantry(item) {
-    const index = selectedPantry.indexOf(item);
-    if (index > -1) {
-      selectedPantry.splice(index, 1);
-    } else {
-      selectedPantry.push(item);
-    }
-    generatePantryChips();
-    render();
-  }
+     h1 { 
+       text-align: center; 
+       border-bottom: 2px solid #2b221a; 
+       padding-bottom: 12px; 
+       font-weight: normal; 
+       font-size: 2.2em; 
+       margin-top: 0; 
+       font-style: italic;
+     }
 
-  function dealRandomRecipe() {
-    if (db.length === 0) return;
-    let pool = db.filter(r => r.rating >= 4);
-    if (pool.length === 0) pool = db;
-    const random = pool[Math.floor(Math.random() * pool.length)];
+     h2 { 
+       color: #6d421d; 
+       border-bottom: 1px dashed #bba38a; 
+       font-weight: normal; 
+       margin-top: 40px; 
+       font-style: italic; 
+       padding-bottom: 5px;
+     }
+
+     .pantry-bar {
+       display: flex;
+       flex-wrap: wrap;
+       gap: 6px;
+       margin-bottom: 15px;
+       justify-content: center;
+       align-items: center;
+     }
+     .pantry-chip {
+       background: #efe7db;
+       border: 1px solid #d4c4b2;
+       padding: 4px 10px;
+       font-size: 0.8em;
+       cursor: pointer;
+       border-radius: 12px;
+       color: #554332;
+       transition: all 0.2s;
+     }
+     .pantry-chip.selected {
+       background: #6d421d;
+       color: #f6efe2;
+       border-color: #6d421d;
+     }
+
+     .toc { 
+       margin-bottom: 30px; 
+       padding: 15px; 
+       background-color: rgba(228, 215, 196, 0.4);
+       border: 1px solid #c8b9a6; 
+     }
+     .toc h3 { 
+       margin-top: 0; 
+       font-weight: normal; 
+       text-align: center; 
+       font-size: 1.2em; 
+       text-transform: uppercase; 
+       letter-spacing: 1.5px; 
+       margin-bottom: 15px; 
+       border-bottom: 1px solid rgba(43,34,26,0.15);
+       padding-bottom: 5px;
+     }
+     .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+     .toc-cat { font-weight: bold; color: #6d421d; text-decoration: none; display: block; margin-bottom: 5px; }
+     .toc-recipes { list-style: none; padding-left: 10px; margin: 0; font-size: 0.85em; border-left: 2px solid #d4c4b2; }
+     .toc-recipes a { color: #4e3e30; text-decoration: none; }
+     .toc-recipes a:hover { text-decoration: underline; }
+     
+     .search-wrapper {
+       display: flex; 
+       gap: 10px; 
+       margin-bottom: 20px;
+     }
+     input { 
+       width: 100%; 
+       background: transparent; 
+       border: none; 
+       border-bottom: 1px solid #4e3f31; 
+       color: #2b221a; 
+       padding: 8px 0; 
+       font-family: inherit; 
+       font-size: 1.05em; 
+       outline: none; 
+       box-sizing: border-box;
+     }
+     input:focus { border-bottom: 2px solid #6d421d; }
+     input::placeholder { color: #7a6a59; font-style: italic; }
+     
+     .recipe { margin-bottom: 40px; }
+     .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43, 34, 26, 0.1); padding-bottom: 8px; margin-bottom: 12px; }
+     .title { font-size: 1.4em; font-weight: bold; }
+     .rating { cursor: pointer; font-size: 1.2em; color: rgba(0, 0, 0, 0.1); }
+     .rating .active { color: #7c481d; }
+     .recipe-tags { font-size: 0.8em; font-style: italic; color: #8b5a2b; margin-bottom: 8px; }
+     .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
+     .ingredients-list strong { color: #1a130b; }
+     .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
+     .ingredients-list li { margin-bottom: 3px; }
+     .method { white-space: pre-line; margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(43, 34, 26, 0.1); color: #35291d; line-height: 1.7; }
+     #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
+
+     #back-to-top {
+       position: fixed;
+       bottom: 20px;
+       right: 20px;
+       background: #5a381a;
+       color: #f6efe2;
+       border: none;
+       border-radius: 50%;
+       width: 45px;
+       height: 45px;
+       font-size: 1.2em;
+       cursor: pointer;
+       display: none;
+       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+       z-index: 1000;
+     }
+  </style>
+</head>
+<body>
+  <div class="book" id="top">
+    <div class="top-bar">
+      <button class="action-btn" onclick="dealRandomRecipe()">Dealer's Choice</button>
+      <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
+    </div>
+    <h1>Paul's Recipes</h1>
     
-    document.getElementById('search').value = random.name;
-    selectedPantry = [];
-    generatePantryChips();
-    render();
-    const target = document.getElementById(`rec-${random.id}`);
-    if (target) {
-      window.scrollTo({top: target.offsetTop - 20, behavior: 'smooth'});
-    }
-  }
+    <div class="search-wrapper">
+      <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
+      <button class="action-btn" onclick="resetMatrix()" style="white-space: nowrap;">Reset</button>
+    </div>
+    
+    <div class="pantry-bar" id="pantry-bar">
+      <span style="font-size: 0.85em; font-style: italic; margin-right: 5px;">Pantry:</span>
+      <span id="pantry-chips-container" style="display: flex; flex-wrap: wrap; gap: 6px;">Loading pantry...</span>
+    </div>
 
-  function resetMatrix() {
-    document.getElementById('search').value = '';
-    selectedPantry = [];
-    generatePantryChips();
-    render();
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+    <div id="loader">Flipping pages...</div>
+    <div id="toc-container"></div>
+    <div id="feed"></div>
+  </div>
 
-  window.onscroll = function() {
-    const btn = document.getElementById('back-to-top');
-    if (btn) {
-      btn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "block" : "none";
-    }
-  };
+  <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
-  function scrollToTop() {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+  <script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
+    let db = [];
+    let wakeLock = null;
+    let selectedPantry = [];
 
-  // Simple CSV parser that handles quoted fields containing commas/newlines
-  function parseCSV(text) {
-    let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
-    for (l of text) {
-      if ('"' === l) {
-        s = !s;
-        if (p === '"') { row[row.length - 1] += '"'; p = ''; }
-        else p = '"';
-      } else if (',' === l && s) {
-        p = ''; row.push('');
-      } else if ('\r' === l && s) {
-        // skip carriage returns
-      } else if ('\n' === l && s) {
-        if (p === '\r') { row[row.length - 1] = row[row.length - 1].slice(0, -1); }
-        row = ['']; ret.push(row); p = '';
-      } else {
-        row[row.length - 1] += l; p = l;
+    async function toggleWakeLock() {
+      const btn = document.getElementById('wakeLockBtn');
+      if ('wakeLock' in navigator) {
+        try {
+          if (wakeLock === null) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            btn.textContent = 'Keep Awake: ON';
+            btn.classList.add('active');
+          } else {
+            await wakeLock.release();
+            wakeLock = null;
+            btn.textContent = 'Keep Awake: OFF';
+            btn.classList.remove('active');
+          }
+        } catch (err) {}
       }
     }
-    return ret;
-  }
 
-  // Fetch recipes directly from the published Google Sheets CSV
-  function fetchRecipes() {
-    fetch(CSV_URL)
-      .then(response => response.text())
-      .then(csvText => {
-        const rows = parseCSV(csvText);
-        db = [];
-        // Skip header row (index 0)
-        for (let i = 1; i < rows.length; i++) {
-          const cols = rows[i];
-          if (cols.length >= 6 && cols[1]) {
-            db.push({
-              id: cols[0],
-              name: cols[1],
-              ingredients: cols[2] ? cols[2].split("|").map(x => x.trim()) : [],
-              method: cols[3] || '',
-              rating: parseInt(cols[4]) || 0,
-              category: cols[5] || 'Uncategorized',
-              tags: cols[6] ? cols[6].split(",").map(t => t.trim()) : []
-            });
-          }
-        }
-        document.getElementById('loader').style.display = 'none';
-        generatePantryChips();
-        render();
-      })
-      .catch(err => {
-        document.getElementById('loader').textContent = "Error loading recipes.";
-      });
-  }
+    function generatePantryChips() {
+      const curatedPantry = [
+        'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
+        'chorizo', 'spinach', 'pasta', 'noodles', 'rice', 
+        'coconut milk', 'passata', 'eggs'
+      ];
 
-  window.rate = function(id, stars) {
-    const r = db.find(x => x.id === id);
-    if(r) {
-      r.rating = stars;
-      render(); 
-      // Optional: Since we are static, rating updates won't write back to the sheet automatically unless you keep a lightweight Apps Script endpoint just for saving ratings, or store them locally in browser memory.
+      const container = document.getElementById('pantry-chips-container');
+      container.innerHTML = curatedPantry.map(item => `
+        <span class="pantry-chip ${selectedPantry.includes(item) ? 'selected' : ''}" onclick="togglePantry('${item}')">
+          ${item.charAt(0).toUpperCase() + item.slice(1)}
+        </span>
+      `).join('');
     }
-  };
 
-  function render() {
-    const query = document.getElementById('search').value.toLowerCase();
-    const feed = document.getElementById('feed');
-    const tocContainer = document.getElementById('toc-container');
-    
-    const filtered = db.filter(r => {
-      const matchesQuery = r.name.toLowerCase().includes(query) || 
-                           r.ingredients.some(i => i.toLowerCase().includes(query)) ||
-                           r.tags.some(t => t.toLowerCase().includes(query));
+    function togglePantry(item) {
+      const index = selectedPantry.indexOf(item);
+      if (index > -1) {
+        selectedPantry.splice(index, 1);
+      } else {
+        selectedPantry.push(item);
+      }
+      generatePantryChips();
+      render();
+    }
+
+    function dealRandomRecipe() {
+      if (db.length === 0) return;
+      let pool = db.filter(r => r.rating >= 4);
+      if (pool.length === 0) pool = db;
+      const random = pool[Math.floor(Math.random() * pool.length)];
       
-      const matchesPantry = selectedPantry.every(p => 
-        r.ingredients.some(i => i.toLowerCase().includes(p))
-      );
-
-      return matchesQuery && matchesPantry;
-    });
-
-    if (filtered.length === 0) {
-        tocContainer.innerHTML = '';
-        feed.innerHTML = "<p style='text-align:center; font-style:italic;'>No recipes found.</p>";
-        return;
+      document.getElementById('search').value = random.name;
+      selectedPantry = [];
+      generatePantryChips();
+      render();
+      const target = document.getElementById(`rec-${random.id}`);
+      if (target) {
+        window.scrollTo({top: target.offsetTop - 20, behavior: 'smooth'});
+      }
     }
 
-    const grouped = {};
-    filtered.forEach(r => {
-      if (!grouped[r.category]) grouped[r.category] = [];
-      grouped[r.category].push(r);
-    });
-
-    const categories = Object.keys(grouped).sort();
-
-    if (query === '' && selectedPantry.length === 0) {
-      tocContainer.innerHTML = `
-        <div class="toc">
-          <h3>Table of Contents</h3>
-          <div class="toc-grid">
-            ${categories.map(cat => `
-              <div>
-                <a class="toc-cat" href="#cat-${cat.replace(/\s+/g, '-')}">${cat}</a>
-                <ul class="toc-recipes">
-                  ${grouped[cat].map(r => `
-                    <li><a href="#rec-${r.id}">${r.name}</a></li>
-                  `).join('')}
-                </ul>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    } else {
-      tocContainer.innerHTML = ''; 
+    function resetMatrix() {
+      document.getElementById('search').value = '';
+      selectedPantry = [];
+      generatePantryChips();
+      render();
+      window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    feed.innerHTML = categories.map(cat => `
-        <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
-        ${grouped[cat].map(r => `
-            <div class="recipe" id="rec-${r.id}">
-                <div class="header">
-                    <div class="title">${r.name}</div>
-                    <div class="rating">
-                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
-                    </div>
+    window.onscroll = function() {
+      const btn = document.getElementById('back-to-top');
+      if (btn) {
+        btn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "block" : "none";
+      }
+    };
+
+    function scrollToTop() {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function parseCSV(text) {
+      let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+      for (l of text) {
+        if ('"' === l) {
+          s = !s;
+          if (p === '"') { row[row.length - 1] += '"'; p = ''; }
+          else p = '"';
+        } else if (',' === l && s) {
+          p = ''; row.push('');
+        } else if ('\r' === l && s) {
+        } else if ('\n' === l && s) {
+          if (p === '\r') { row[row.length - 1] = row[row.length - 1].slice(0, -1); }
+          row = ['']; ret.push(row); p = '';
+        } else {
+          row[row.length - 1] += l; p = l;
+        }
+      }
+      return ret;
+    }
+
+    function fetchRecipes() {
+      fetch(CSV_URL)
+        .then(response => response.text())
+        .then(csvText => {
+          const rows = parseCSV(csvText);
+          db = [];
+          for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i];
+            if (cols.length >= 6 && cols[1]) {
+              db.push({
+                id: cols[0],
+                name: cols[1],
+                ingredients: cols[2] ? cols[2].split("|").map(x => x.trim()) : [],
+                method: cols[3] || '',
+                rating: parseInt(cols[4]) || 0,
+                category: cols[5] || 'Uncategorized',
+                tags: cols[6] ? cols[6].split(",").map(t => t.trim()) : []
+              });
+            }
+          }
+          document.getElementById('loader').style.display = 'none';
+          generatePantryChips();
+          render();
+        })
+        .catch(err => {
+          document.getElementById('loader').textContent = "Error loading recipes.";
+        });
+    }
+
+    window.rate = function(id, stars) {
+      const r = db.find(x => x.id === id);
+      if(r) {
+        r.rating = stars;
+        render(); 
+      }
+    };
+
+    function render() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const feed = document.getElementById('feed');
+      const tocContainer = document.getElementById('toc-container');
+      
+      const filtered = db.filter(r => {
+        const matchesQuery = r.name.toLowerCase().includes(query) || 
+                             r.ingredients.some(i => i.toLowerCase().includes(query)) ||
+                             r.tags.some(t => t.toLowerCase().includes(query));
+        
+        const matchesPantry = selectedPantry.every(p => 
+          r.ingredients.some(i => i.toLowerCase().includes(p))
+        );
+
+        return matchesQuery && matchesPantry;
+      });
+
+      if (filtered.length === 0) {
+          tocContainer.innerHTML = '';
+          feed.innerHTML = "<p style='text-align:center; font-style:italic;'>No recipes found.</p>";
+          return;
+      }
+
+      const grouped = {};
+      filtered.forEach(r => {
+        if (!grouped[r.category]) grouped[r.category] = [];
+        grouped[r.category].push(r);
+      });
+
+      const categories = Object.keys(grouped).sort();
+
+      if (query === '' && selectedPantry.length === 0) {
+        tocContainer.innerHTML = `
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <div class="toc-grid">
+              ${categories.map(cat => `
+                <div>
+                  <a class="toc-cat" href="#cat-${cat.replace(/\s+/g, '-')}">${cat}</a>
+                  <ul class="toc-recipes">
+                    ${grouped[cat].map(r => `
+                      <li><a href="#rec-${r.id}">${r.name}</a></li>
+                    `).join('')}
+                  </ul>
                 </div>
-                ${r.tags.length > 0 ? `<div class="recipe-tags">Tags: ${r.tags.join(', ')}</div>` : ''}
-                <div class="ingredients-list">
-                    <strong>Ingredients:</strong>
-                    <ul>
-                        ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
-                    </ul>
-                </div>
-                <div class="method">${r.method}</div>
+              `).join('')}
             </div>
-        `).join('')}
-    `).join('');
-  }
+          </div>
+        `;
+      } else {
+        tocContainer.innerHTML = ''; 
+      }
 
-  fetchRecipes();
-</script>
+      feed.innerHTML = categories.map(cat => `
+          <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
+          ${grouped[cat].map(r => `
+              <div class="recipe" id="rec-${r.id}">
+                  <div class="header">
+                      <div class="title">${r.name}</div>
+                      <div class="rating">
+                          ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
+                      </div>
+                  </div>
+                  ${r.tags.length > 0 ? `<div class="recipe-tags">Tags: ${r.tags.join(', ')}</div>` : ''}
+                  <div class="ingredients-list">
+                      <strong>Ingredients:</strong>
+                      <ul>
+                          ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
+                      </ul>
+                  </div>
+                  <div class="method">${r.method}</div>
+              </div>
+          `).join('')}
+      `).join('');
+    }
+
+    fetchRecipes();
+  </script>
+</body>
+</html>
