@@ -218,7 +218,7 @@
   <div class="book" id="top">
     <div class="header-nav">
       <div class="action-group">
-        <button class="action-btn" onclick="dealRandomRecipe(false)">Dealer's Choice</button>
+        <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
         <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
       </div>
       <div class="action-group">
@@ -226,7 +226,7 @@
       </div>
     </div>
 
-    <h1>Paul's Recipes</h1>
+    <h1>Recipes for cooking</h1>
     
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
@@ -246,7 +246,7 @@
   <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
   <script>
-    const CSV_URL = "YOUR_PUBLISHED_CSV_URL_HERE";
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
     let db = [];
     let wakeLock = null;
     let selectedPantry = [];
