@@ -218,16 +218,16 @@
   <div class="book" id="top">
     <div class="header-nav">
       <div class="action-group">
-        <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
-        <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
+        <button class="action-btn" onclick="dealRandomRecipe(false)">Dealer's Choice</button>
         <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
+        <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
       </div>
       <div class="action-group">
         <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
       </div>
     </div>
 
-    <h1>Paul's recipes (for cooking)</h1>
+    <h1>Paul's Recipes</h1>
     
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
@@ -246,83 +246,22 @@
 
   <button id="back-to-top" onclick="scrollToTop()">↑</button>
 
+  <!-- Add Recipe Modal -->
+  <div id="addModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div style="background:#f6efe2; padding:25px; border-radius:6px; max-width:500px; width:90%; border:2px solid #5a381a; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+      <h3 style="margin-top:0; color:#6d421d; font-style:italic; border-bottom:1px dashed #bba38a; padding-bottom:8px;">Add New Recipe</h3>
+      <p style="font-size:0.85em; font-style:italic; margin-bottom:15px;">Paste the recipe JSON block below:</p>
+      <textarea id="recipeInput" placeholder='{"name": "...", "category": "...", "ingredients": ["..."], "method": "...", "tags": "..."}' style="width:100%; height:140px; background:#fff; border:1px solid #c8b9a6; padding:8px; font-family:monospace; font-size:0.8em; box-sizing:border-box; margin-bottom:15px;"></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button class="action-btn" onclick="closeAddModal()" style="background:#d4c4b2;">Cancel</button>
+        <button class="action-btn" onclick="submitNewRecipe()" style="background:#5a381a; color:#f6efe2;">Submit to Sheet</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz8pp7eaAm5MyN0xjI9jThMjgZ4eSdhMAZUKoAs1SPBS3qOd_xb91QFts9AzK8-eytm/exec";
-
-    function openAddModal() {
-      document.getElementById('addModal').style.display = 'flex';
-    }
-
-    function closeAddModal() {
-      document.getElementById('addModal').style.display = 'none';
-      document.getElementById('recipeInput').value = '';
-    }
-
-   function submitNewRecipe() {
-      let rawText = document.getElementById('recipeInput').value.trim();
-      if (!rawText) return;
-
-      // Strip markdown code blocks if you pasted them directly from chat
-      rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
-
-      let recipe;
-      try {
-        recipe = JSON.parse(rawText);
-      } catch (err) {
-        alert('Could not parse JSON. Make sure you are pasting valid JSON.');
-        return;
-      }
-
-      // Handle ingredients whether they are an array or a pipe-separated string
-      let ingredientsStr = recipe.ingredients;
-      if (Array.isArray(recipe.ingredients)) {
-        ingredientsStr = recipe.ingredients.join('|');
-      }
-
-      const params = new URLSearchParams({
-        name: recipe.name || recipe.title || 'Untitled Recipe',
-        ingredients: ingredientsStr || '',
-        category: recipe.category || recipe.type || 'Uncategorized',
-        method: recipe.method || recipe.instructions || '',
-        tags: recipe.tags ? (Array.isArray(recipe.tags) ? recipe.tags.join(', ') : recipe.tags) : ''
-      });
-
-      fetch(`${INSERT_API_URL}?${params.toString()}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            alert('Recipe added successfully! Refreshing matrix...');
-            closeAddModal();
-            fetchRecipes();
-          } else {
-            alert('Error adding recipe: ' + data.message);
-          }
-        })
-        .catch(err => alert('Network error submitting recipe.'));
-    }
-
-      const params = new URLSearchParams({
-        name: recipe.name,
-        ingredients: recipe.ingredients,
-        category: recipe.category,
-        method: recipe.method || '',
-        tags: recipe.tags || ''
-      });
-
-      fetch(`${INSERT_API_URL}?${params.toString()}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            alert('Recipe added successfully! Refreshing matrix...');
-            closeAddModal();
-            fetchRecipes(); // Reloads the CSV data
-          } else {
-            alert('Error adding recipe: ' + data.message);
-          }
-        })
-        .catch(err => alert('Network error submitting recipe.'));
-    }
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
+    const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz8pp7eaAm5MyN0xjI9jThMjgZ4eSdhMAZUKoAs1SPBS3qOd_xb91QFts9AzK8-eytm/exec";
     let db = [];
     let wakeLock = null;
     let selectedPantry = [];
@@ -345,11 +284,61 @@
       }
     }
 
+    function openAddModal() {
+      document.getElementById('addModal').style.display = 'flex';
+    }
+
+    function closeAddModal() {
+      document.getElementById('addModal').style.display = 'none';
+      document.getElementById('recipeInput').value = '';
+    }
+
+    function submitNewRecipe() {
+      let rawText = document.getElementById('recipeInput').value.trim();
+      if (!rawText) return;
+
+      rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
+
+      let recipe;
+      try {
+        recipe = JSON.parse(rawText);
+      } catch (err) {
+        alert('Could not parse JSON. Make sure you are pasting valid JSON.');
+        return;
+      }
+
+      let ingredientsStr = recipe.ingredients;
+      if (Array.isArray(recipe.ingredients)) {
+        ingredientsStr = recipe.ingredients.join('|');
+      }
+
+      const params = new URLSearchParams({
+        name: recipe.name || recipe.title || 'Untitled Recipe',
+        ingredients: ingredientsStr || '',
+        category: recipe.category || recipe.type || 'Uncategorized',
+        method: recipe.method || recipe.instructions || '',
+        tags: recipe.tags ? (Array.isArray(recipe.tags) ? recipe.tags.join(', ') : recipe.tags) : ''
+      });
+
+      fetch(`${INSERT_API_URL}?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('Recipe added successfully! Refreshing matrix...');
+            closeAddModal();
+            fetchRecipes();
+          } else {
+            alert('Error adding recipe: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(err => alert('Network error submitting recipe.'));
+    }
+
     function generatePantryChips() {
       const curatedPantry = [
         'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
-        'chicken', 'spinach', 'pasta', 'noodles', 'rice', 
-        'mince', 'passata', 'eggs'
+        'chorizo', 'spinach', 'pasta', 'noodles', 'rice', 
+        'coconut milk', 'passata', 'eggs'
       ];
 
       const container = document.getElementById('pantry-chips-container');
@@ -498,7 +487,7 @@
       if (query === '' && selectedPantry.length === 0) {
         tocContainer.innerHTML = `
           <div class="toc">
-            <h3>MENU</h3>
+            <h3>Table of Contents</h3>
             <div class="toc-grid">
               ${categories.map(cat => `
                 <div>
@@ -542,16 +531,5 @@
 
     fetchRecipes();
   </script>
-  <div id="addModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
-  <div style="background:#f6efe2; padding:25px; border-radius:6px; max-width:500px; width:90%; border:2px solid #5a381a; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-    <h3 style="margin-top:0; color:#6d421d; font-style:italic; border-bottom:1px dashed #bba38a; padding-bottom:8px;">Add New Recipe</h3>
-    <p style="font-size:0.85em; font-style:italic; margin-bottom:15px;">Paste your recipe JSON or raw text details below:</p>
-    <textarea id="recipeInput" placeholder='{"name": "...", "category": "...", "ingredients": "ing1|ing2", "method": "...", "tags": "..."}' style="width:100%; height:120px; background:#fff; border:1px solid #c8b9a6; padding:8px; font-family:monospace; font-size:0.85em; box-sizing:border-box; margin-bottom:15px;"></textarea>
-    <div style="display:flex; justify-content:flex-end; gap:10px;">
-      <button class="action-btn" onclick="closeAddModal()" style="background:#d4c4b2;">Cancel</button>
-      <button class="action-btn" onclick="submitNewRecipe()" style="background:#5a381a; color:#f6efe2;">Submit to Sheet</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
