@@ -452,6 +452,7 @@ const params = new URLSearchParams({
         render(); 
       }
     };
+    ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; margin-bottom: 8px; background: rgba(228, 215, 196, 0.4); padding: 4px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
 
     function render() {
       const query = document.getElementById('search').value.toLowerCase();
