@@ -258,17 +258,48 @@
       document.getElementById('recipeInput').value = '';
     }
 
-    function submitNewRecipe() {
-      const rawText = document.getElementById('recipeInput').value.trim();
+   function submitNewRecipe() {
+      let rawText = document.getElementById('recipeInput').value.trim();
       if (!rawText) return;
+
+      // Strip markdown code blocks if you pasted them directly from chat
+      rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
 
       let recipe;
       try {
         recipe = JSON.parse(rawText);
       } catch (err) {
-        alert('Invalid JSON format.');
+        alert('Could not parse JSON. Make sure you are pasting valid JSON.');
         return;
       }
+
+      // Handle ingredients whether they are an array or a pipe-separated string
+      let ingredientsStr = recipe.ingredients;
+      if (Array.isArray(recipe.ingredients)) {
+        ingredientsStr = recipe.ingredients.join('|');
+      }
+
+      const params = new URLSearchParams({
+        name: recipe.name || recipe.title || 'Untitled Recipe',
+        ingredients: ingredientsStr || '',
+        category: recipe.category || recipe.type || 'Uncategorized',
+        method: recipe.method || recipe.instructions || '',
+        tags: recipe.tags ? (Array.isArray(recipe.tags) ? recipe.tags.join(', ') : recipe.tags) : ''
+      });
+
+      fetch(`${INSERT_API_URL}?${params.toString()}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('Recipe added successfully! Refreshing matrix...');
+            closeAddModal();
+            fetchRecipes();
+          } else {
+            alert('Error adding recipe: ' + data.message);
+          }
+        })
+        .catch(err => alert('Network error submitting recipe.'));
+    }
 
       const params = new URLSearchParams({
         name: recipe.name,
