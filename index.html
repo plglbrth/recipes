@@ -195,8 +195,6 @@
      .ingredients-list li { margin-bottom: 3px; }
      .method { white-space: pre-line; margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(43, 34, 26, 0.1); color: #35291d; line-height: 1.7; }
      #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
-    ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; margin-bottom: 8px; background: rgba(228, 215, 196, 0.4); padding: 4px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
-
      #back-to-top {
        position: fixed;
        bottom: 20px;
@@ -517,6 +515,7 @@ const params = new URLSearchParams({
                           ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
                       </div>
                   </div>
+                  ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; margin-bottom: 8px; background: rgba(228, 215, 196, 0.4); padding: 4px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
                   <div class="ingredients-list">
                       <strong>Ingredients:</strong>
                       <ul>
