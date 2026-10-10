@@ -271,11 +271,9 @@
       render();
     }
 
-    function dealRandomRecipe() {
+function dealRandomRecipe() {
       if (db.length === 0) return;
-      let pool = db.filter(r => r.rating >= 4);
-      if (pool.length === 0) pool = db;
-      const random = pool[Math.floor(Math.random() * pool.length)];
+      const random = db[Math.floor(Math.random() * db.length)];
       
       document.getElementById('search').value = random.name;
       selectedPantry = [];
