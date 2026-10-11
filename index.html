@@ -1,621 +1,342 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paul's Recipes (for cooking)</title>
+  <title>Recipe Matrix</title>
   <style>
-     body { 
-       background-color: #cbbaa7; 
-       background-image: 
-         radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.15) 1px, transparent 150px),
-         radial-gradient(circle at 75% 60%, rgba(90, 55, 30, 0.15) 1px, transparent 120px),
-         radial-gradient(circle at 10% 85%, rgba(0,0,0,0.08) 2px, transparent 200px);
-       color: #2b221a; 
-       font-family: 'Georgia', serif; 
-       padding: 12px; 
-       line-height: 1.6; 
-       box-sizing: border-box;
-     }
-     
-     .book { 
-       max-width: 800px; 
-       margin: 0 auto; 
-       background-color: #f6efe2; 
-       background-image: 
-         radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 8px),
-         radial-gradient(circle at 80% 25%, transparent 40px, rgba(100, 60, 30, 0.25) 41px, rgba(100, 60, 30, 0.12) 43px, transparent 48px),
-         radial-gradient(circle at 81.5% 24.5%, rgba(100, 60, 30, 0.3) 1px, transparent 12px),
-         radial-gradient(circle at 35% 72%, transparent 35px, rgba(90, 48, 20, 0.2) 36px, rgba(90, 48, 20, 0.08) 38px, transparent 42px),
-         radial-gradient(ellipse at 88% 70%, rgba(90, 48, 20, 0.12) 0%, rgba(90, 48, 20, 0.08) 40%, transparent 70%),
-         radial-gradient(circle at 0% 0%, rgba(90, 48, 20, 0.15) 0%, transparent 30%),
-         radial-gradient(circle at 100% 100%, rgba(70, 40, 15, 0.15) 0%, transparent 40%),
-         radial-gradient(ellipse at center, transparent 30%, rgba(90, 48, 20, 0.15) 100%);
-       padding: 20px; 
-       box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 0 40px rgba(90, 50, 20, 0.08); 
-       border-radius: 4px; 
-       border-left: 8px solid #5a381a; 
-       position: relative;
-       box-sizing: border-box;
-     }
+    :root {
+      --bg-color: #f4f1ea;
+      --card-bg: #ffffff;
+      --text-color: #2b2b2b;
+      --accent-color: #8b0000;
+      --border-color: #ddd;
+    }
 
-     @media (min-width: 600px) {
-       body { padding: 25px; }
-       .book { padding: 45px; border-left-width: 12px; }
-     }
-     
-     .book::after {
-       content: "";
-       position: absolute;
-       top: 0; left: 0; right: 0; bottom: 0;
-       pointer-events: none;
-       background-image:
-         radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 2px),
-         radial-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
-       background-size: 140px 170px, 83px 97px;
-       opacity: 0.85;
-     }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
 
-     .header-nav {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       flex-wrap: wrap;
-       gap: 10px;
-       margin-bottom: 20px;
-       padding-bottom: 15px;
-       border-bottom: 1px dashed #d4c4b2;
-     }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-     .action-group {
-       display: flex;
-       gap: 8px;
-       flex-wrap: wrap;
-     }
+    .header-banner img {
+      width: 100%;
+      max-height: 350px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-     .action-btn {
-       background: #e4d7c4;
-       border: 1px solid #c8b9a6;
-       color: #5a381a;
-       padding: 6px 12px;
-       font-family: inherit;
-       font-size: 0.8em;
-       cursor: pointer;
-       border-radius: 4px;
-       transition: all 0.2s;
-       font-weight: bold;
-     }
-     .action-btn:hover {
-       background: #d4c4b2;
-     }
-     .action-btn.active {
-       background: #5a381a;
-       color: #f6efe2;
-     }
+    h1 {
+      text-align: center;
+      color: var(--accent-color);
+      margin-bottom: 20px;
+    }
 
-     h1 { 
-       text-align: center; 
-       border-bottom: 2px solid #2b221a; 
-       padding-bottom: 15px; 
-       font-weight: normal; 
-       font-size: 2.4em; 
-       margin-top: 5px; 
-       margin-bottom: 20px;
-       font-style: italic;
-       letter-spacing: 1px;
-     }
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
 
-     h2 { 
-       color: #6d421d; 
-       border-bottom: 1px dashed #bba38a; 
-       font-weight: normal; 
-       margin-top: 40px; 
-       font-style: italic; 
-       padding-bottom: 5px;
-     }
+    input[type="text"], select {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 16px;
+      flex: 1;
+    }
 
-     .pantry-bar {
-       display: flex;
-       flex-wrap: wrap;
-       gap: 6px;
-       margin-bottom: 20px;
-       justify-content: center;
-       align-items: center;
-     }
-     .pantry-chip {
-       background: #efe7db;
-       border: 1px solid #d4c4b2;
-       padding: 4px 10px;
-       font-size: 0.8em;
-       cursor: pointer;
-       border-radius: 12px;
-       color: #554332;
-       transition: all 0.2s;
-     }
-     .pantry-chip.selected {
-       background: #6d421d;
-       color: #f6efe2;
-       border-color: #6d421d;
-     }
+    .btn {
+      padding: 10px 16px;
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
 
-     .toc { 
-       margin-bottom: 30px; 
-       padding: 15px; 
-       background-color: rgba(228, 215, 196, 0.4);
-       border: 1px solid #c8b9a6; 
-     }
-     .toc h3 { 
-       margin-top: 0; 
-       font-weight: normal; 
-       text-align: center; 
-       font-size: 1.2em; 
-       text-transform: uppercase; 
-       letter-spacing: 1.5px; 
-       margin-bottom: 15px; 
-       border-bottom: 1px solid rgba(43,34,26,0.15);
-       padding-bottom: 5px;
-     }
-     .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-     .toc-cat { font-weight: bold; color: #6d421d; text-decoration: none; display: block; margin-bottom: 5px; }
-     .toc-recipes { list-style: none; padding-left: 10px; margin: 0; font-size: 0.85em; border-left: 2px solid #d4c4b2; }
-     .toc-recipes a { color: #4e3e30; text-decoration: none; }
-     .toc-recipes a:hover { text-decoration: underline; }
-     
-     .search-wrapper {
-       display: flex; 
-       gap: 10px; 
-       margin-bottom: 20px;
-       background: rgba(228, 215, 196, 0.3);
-       padding: 8px 12px;
-       border: 1px solid #d4c4b2;
-       border-radius: 4px;
-       align-items: center;
-     }
-     input { 
-       width: 100%; 
-       background: transparent; 
-       border: none; 
-       color: #2b221a; 
-       padding: 4px 0; 
-       font-family: inherit; 
-       font-size: 1.05em; 
-       outline: none; 
-     }
-     input::placeholder { color: #8c7a69; font-style: italic; }
-     
-     .recipe { margin-bottom: 40px; }
-     .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43, 34, 26, 0.1); padding-bottom: 8px; margin-bottom: 12px; }
-     .title { font-size: 1.4em; font-weight: bold; }
-     .rating { cursor: pointer; font-size: 1.2em; color: rgba(0, 0, 0, 0.1); }
-     .rating .active { color: #7c481d; }
-     .recipe-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
-     .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
-     .ingredients-list strong { color: #1a130b; }
-     .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
-     .ingredients-list li { margin-bottom: 3px; }
-     .method { white-space: pre-line; margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(43, 34, 26, 0.1); color: #35291d; line-height: 1.7; }
-     #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
+    .btn:hover {
+      opacity: 0.9;
+    }
 
-     #back-to-top {
-       position: fixed;
-       bottom: 20px;
-       right: 20px;
-       background: #5a381a;
-       color: #f6efe2;
-       border: none;
-       border-radius: 50%;
-       width: 45px;
-       height: 45px;
-       font-size: 1.2em;
-       cursor: pointer;
-       display: none;
-       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-       z-index: 1000;
-     }
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .recipe-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .recipe-card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--accent-color);
+    }
+
+    .recipe-meta {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .recipe-section {
+      margin-bottom: 12px;
+    }
+
+    .recipe-section strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .star-rating {
+      color: #f39c12;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .recipe-notes-container {
+      margin-top: 15px;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 10px;
+    }
+
+    .recipe-notes-container label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .recipe-notes-container textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
-  <div class="book" id="top">
-    <div class="header-nav">
-      <div class="action-group">
-        <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
-        <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
-        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
-      </div>
-      <div class="action-group">
-        <button id="sortMostCookedBtn" class="action-btn" onclick="toggleMostCooked()">Most Cooked: OFF</button>
-        <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
-      </div>
-    </div>
-    <h1>Paul's Recipes (for cooking)</h1>    
-    <div class="search-wrapper">
-      <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
-      <button class="action-btn" onclick="resetMatrix()" style="background: #d4c4b2;">Reset</button>
-    </div>
-    
-    <div class="pantry-bar" id="pantry-bar">
-      <span style="font-size: 0.85em; font-style: italic; margin-right: 5px;">Pantry:</span>
-      <span id="pantry-chips-container" style="display: flex; flex-wrap: wrap; gap: 6px;">Loading pantry...</span>
+
+  <div class="container">
+    <div class="header-banner">
+      <img src="banner.jpg" alt="Kitchen Chaos Banner" onerror="this.style.display='none'">
     </div>
 
-    <div id="loader">Making myself decent...</div>
-    <div id="toc-container"></div>
-    <div id="feed"></div>
-  </div>
+    <h1>Recipe Matrix</h1>
 
-  <button id="back-to-top" onclick="scrollToTop()">↑</button>
+    <div class="controls">
+      <input type="text" id="search-input" placeholder="Search recipes or ingredients..." oninput="filterRecipes()">
+      <select id="category-filter" onchange="filterRecipes()">
+        <option value="">All Categories</option>
+      </select>
+    </div>
 
-  <!-- Add Recipe Modal -->
-  <div id="addModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
-    <div style="background:#f6efe2; padding:25px; border-radius:6px; max-width:500px; width:90%; border:2px solid #5a381a; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-      <h3 style="margin-top:0; color:#6d421d; font-style:italic; border-bottom:1px dashed #bba38a; padding-bottom:8px;">Add New Recipe</h3>
-      <p style="font-size:0.85em; font-style:italic; margin-bottom:15px;">Paste the recipe JSON block below:</p>
-      <textarea id="recipeInput" placeholder='{"name": "...", "category": "...", "ingredients": ["..."], "method": "...", "drink": "..."}' style="width:100%; height:140px; background:#fff; border:1px solid #c8b9a6; padding:8px; font-family:monospace; font-size:0.8em; box-sizing:border-box; margin-bottom:15px;"></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:10px;">
-        <button class="action-btn" onclick="closeAddModal()" style="background:#d4c4b2;">Cancel</button>
-        <button class="action-btn" onclick="submitNewRecipe()" style="background:#5a381a; color:#f6efe2;">Submit to Sheet</button>
-      </div>
+    <div id="recipe-grid" class="recipe-grid">
+      <p>Loading recipes...</p>
     </div>
   </div>
 
   <script>
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
     const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz-eWkTyhE0JpGl8GxvVvXllX3Y4NJpqfKRYzA9VnbQ0TQGmhOC70VYBRH_fiOyFdcr/exec";
-    let db = [];
-    let wakeLock = null;
-    let selectedPantry = [];
-    let sortByMostCooked = false;
+    
+    let recipes = [];
 
-    async function toggleWakeLock() {
-      const btn = document.getElementById('wakeLockBtn');
-      if ('wakeLock' in navigator) {
-        try {
-          if (wakeLock === null) {
-            wakeLock = await navigator.wakeLock.request('screen');
-            btn.textContent = 'Keep Awake: ON';
-            btn.classList.add('active');
+    // Helper to parse CSV properly handling quoted values
+    function parseCSV(text) {
+      const lines = text.trim().split("\n");
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const row = [];
+        let insideQuote = false;
+        let entry = '';
+        for (let char of lines[i]) {
+          if (char === '"') {
+            insideQuote = !insideQuote;
+          } else if (char === ',' && !insideQuote) {
+            row.push(entry.trim().replace(/^"|"$/g, ''));
+            entry = '';
           } else {
-            await wakeLock.release();
-            wakeLock = null;
-            btn.textContent = 'Keep Awake: OFF';
-            btn.classList.remove('active');
+            entry += char;
           }
-        } catch (err) {}
+        }
+        row.push(entry.trim().replace(/^"|"$/g, ''));
+        result.push(row);
       }
+      return result;
     }
 
-    function toggleMostCooked() {
-      sortByMostCooked = !sortByMostCooked;
-      const btn = document.getElementById('sortMostCookedBtn');
-      if (sortByMostCooked) {
-        btn.textContent = 'Most Cooked: ON';
-        btn.classList.add('active');
-      } else {
-        btn.textContent = 'Most Cooked: OFF';
-        btn.classList.remove('active');
-      }
-      render();
-    }
-
-    function openAddModal() {
-      document.getElementById('addModal').style.display = 'flex';
-    }
-
-    function closeAddModal() {
-      document.getElementById('addModal').style.display = 'none';
-      document.getElementById('recipeInput').value = '';
-    }
-
-    function submitNewRecipe() {
-      let rawText = document.getElementById('recipeInput').value.trim();
-      if (!rawText) return;
-
-      rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
-
-      let recipe;
+    async function loadRecipes() {
       try {
-        recipe = JSON.parse(rawText);
+        // Fetch raw CSV export from Google Sheet or backend JSON
+        const response = await fetch(INSERT_API_URL);
+        const data = await response.json();
+        
+        if (Array.isArray(data)) {
+          recipes = data;
+        } else if (data.recipes) {
+          recipes = data.recipes;
+        } else {
+          console.log("Backend online check:", data);
+        }
+        
+        populateCategories();
+        renderRecipes(recipes);
       } catch (err) {
-        alert('Could not parse JSON. Make sure you are pasting valid JSON.');
+        console.error("Error loading recipes:", err);
+        document.getElementById('recipe-grid').innerHTML = '<p>Failed to load recipes. Check API URL or CORS settings.</p>';
+      }
+    }
+
+    function populateCategories() {
+      const select = document.getElementById('category-filter');
+      const categories = [...new Set(recipes.map(r => r.category).filter(Boolean))];
+      select.innerHTML = '<option value="">All Categories</option>' + 
+        categories.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function renderRecipes(items) {
+      const grid = document.getElementById('recipe-grid');
+      if (items.length === 0) {
+        grid.innerHTML = '<p>No recipes found.</p>';
         return;
       }
 
-      let ingredientsStr = recipe.ingredients;
-      if (Array.isArray(recipe.ingredients)) {
-        ingredientsStr = recipe.ingredients.join('|');
-      }
+      grid.innerHTML = items.map(r => `
+        <div class="recipe-card" id="card-${r.id}">
+          <div>
+            <h2>${r.name || 'Untitled Recipe'}</h2>
+            <div class="recipe-meta">
+              <span>Category: ${r.category || 'Uncategorized'}</span> | 
+              <span>Times Made: <strong id="count-${r.id}">${r.timesMade || 0}</strong></span>
+              ${r.lastMade ? ` | <span>Last: ${r.lastMade}</span>` : ''}
+            </div>
 
-      const params = new URLSearchParams({
-        name: recipe.name || recipe.title || 'Untitled Recipe',
-        ingredients: ingredientsStr || '',
-        category: recipe.category || recipe.type || 'Uncategorized',
-        method: recipe.method || recipe.instructions || '',
-        drink: recipe.drink || recipe.pairing || ''
-      });
+            ${r.drink ? `<div class="recipe-section"><strong>Drink Pairing:</strong> ${r.drink}</div>` : ''}
+            <div class="recipe-section"><strong>Ingredients:</strong> ${r.ingredients || 'None listed'}</div>
+            <div class="recipe-section"><strong>Method:</strong> ${r.method || 'None listed'}</div>
+          </div>
 
-      fetch(`${INSERT_API_URL}?${params.toString()}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            alert('Recipe added successfully! Refreshing matrix...');
-            closeAddModal();
-            fetchRecipes();
-          } else {
-            alert('Error adding recipe: ' + (data.message || 'Unknown error'));
-          }
-        })
-        .catch(err => alert('Network error submitting recipe.'));
-    }
-async function saveRecipeNotes(id, notesText) {
-  try {
-    const response = await fetch(`${INSERT_API_URL}?action=update_notes&id=${encodeURIComponent(id)}&notes=${encodeURIComponent(notesText)}`);
-    const data = await response.json();
-    if (data.status === 'success') {
-      // Find local object in state and update it so it survives filtering without re-fetch
-      const target = recipes.find(r => String(r.id) === String(id));
-      if (target) target.notes = notesText;
-    } else {
-      console.error("Failed to save notes:", data.message);
-    }
-  } catch (err) {
-    console.error("Network error saving notes:", err);
-  }
-}   
-  function logMade(id) {
-  const btn = document.getElementById(`made-btn-${id}`);
-  if (btn) btn.textContent = 'Logging...';
+          <div>
+            <div class="card-actions">
+              <div class="star-rating">
+                ${[1, 2, 3, 4, 5].map(star => `
+                  <span onclick="rateRecipe('${r.id}', ${star})" style="cursor:pointer;">
+                    ${star <= (r.rating || 0) ? '★' : '☆'}
+                  </span>
+                `).join('')}
+              </div>
+              <button class="btn" onclick="logMade('${r.id}')">Cooked This!</button>
+            </div>
 
-  fetch(`${INSERT_API_URL}?action=log_made&id=${id}`, {
-    method: 'GET',
-    redirect: 'follow'
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.status === 'success') {
-      const recipe = db.find(r => r.id === id);
-      if (recipe) {
-        recipe.timesMade = data.newCount;
-        recipe.lastMade = new Date().toISOString().split('T')[0];
-      }
-      render();
-    } else {
-      alert('Error logging recipe: ' + (data.message || 'Unknown'));
-      if (btn) btn.textContent = 'I Made This 🍳';
-    }
-  })
-  .catch(err => {
-    // Fallback: If browser blocks JSON read due to redirect CORS, state updates locally and re-fetches sheet after 1s
-    const recipe = db.find(r => r.id === id);
-    if (recipe) {
-      recipe.timesMade = (recipe.timesMade || 0) + 1;
-      recipe.lastMade = new Date().toISOString().split('T')[0];
-      render();
-    }
-    setTimeout(fetchRecipes, 1500);
-  });
-}
-
-    function generatePantryChips() {
-      const curatedPantry = [
-        'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
-        'mince', 'spinach', 'pasta', 'noodles', 'rice', 
-        'chicken', 'passata', 'eggs'
-      ];
-
-      const container = document.getElementById('pantry-chips-container');
-      container.innerHTML = curatedPantry.map(item => `
-        <span class="pantry-chip ${selectedPantry.includes(item) ? 'selected' : ''}" onclick="togglePantry('${item}')">
-          ${item.charAt(0).toUpperCase() + item.slice(1)}
-        </span>
-      `).join('');
-    }
-
-    function togglePantry(item) {
-      const index = selectedPantry.indexOf(item);
-      if (index > -1) {
-        selectedPantry.splice(index, 1);
-      } else {
-        selectedPantry.push(item);
-      }
-      generatePantryChips();
-      render();
-    }
-
-    function dealRandomRecipe(bangersOnly) {
-      if (db.length === 0) return;
-      let pool = bangersOnly ? db.filter(r => r.rating >= 4) : db;
-      if (pool.length === 0) pool = db;
-      
-      const random = pool[Math.floor(Math.random() * pool.length)];
-      
-      document.getElementById('search').value = random.name;
-      selectedPantry = [];
-      generatePantryChips();
-      render();
-      const target = document.getElementById(`rec-${random.id}`);
-      if (target) {
-        window.scrollTo({top: target.offsetTop - 20, behavior: 'smooth'});
-      }
-    }
-
-    function resetMatrix() {
-      document.getElementById('search').value = '';
-      selectedPantry = [];
-      generatePantryChips();
-      render();
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    window.onscroll = function() {
-      const btn = document.getElementById('back-to-top');
-      if (btn) {
-        btn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "block" : "none";
-      }
-    };
-
-    function scrollToTop() {
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    function parseCSV(text) {
-      let p = '', row = [''], ret = [row], s = !0, l;
-      for (l of text) {
-        if ('"' === l) {
-          s = !s;
-          if (p === '"') { row[row.length - 1] += '"'; p = ''; }
-          else p = '"';
-        } else if (',' === l && s) {
-          p = ''; row.push('');
-        } else if ('\r' === l && s) {
-        } else if ('\n' === l && s) {
-          if (p === '\r') { row[row.length - 1] = row[row.length - 1].slice(0, -1); }
-          row = ['']; ret.push(row); p = '';
-        } else {
-          row[row.length - 1] += l; p = l;
-        }
-      }
-      return ret;
-    }
-
-    function fetchRecipes() {
-      fetch(CSV_URL)
-        .then(response => response.text())
-        .then(csvText => {
-          const rows = parseCSV(csvText);
-          db = [];
-          for (let i = 1; i < rows.length; i++) {
-            const cols = rows[i];
-            if (cols.length >= 6 && cols[1]) {
-              db.push({
-                id: cols[0],
-                name: cols[1],
-                ingredients: cols[2] ? cols[2].split("|").map(x => x.trim()) : [],
-                method: cols[3] || '',
-                rating: parseInt(cols[4]) || 0,
-                category: cols[5] || 'Uncategorized',
-                drink: cols[6] || '',
-                lastMade: cols[7] || '',
-                timesMade: parseInt(cols[8]) || 0
-                notes: cols[9] || ""
-              });
-            }
-          }
-          document.getElementById('loader').style.display = 'none';
-          generatePantryChips();
-          render();
-        })
-        .catch(err => {
-          document.getElementById('loader').textContent = "Error loading recipes.";
-        });
-    }
-
-window.rate = function(id, stars) {
-  const r = db.find(x => x.id === id);
-  if (r) {
-    r.rating = stars;
-    render(); 
-
-    fetch(`${INSERT_API_URL}?action=rate&id=${id}&rating=${stars}`, {
-      method: 'GET',
-      redirect: 'follow'
-    }).catch(err => console.error('Rating sync error:', err));
-  }
-};
-
-    function render() {
-      const query = document.getElementById('search').value.toLowerCase();
-      const feed = document.getElementById('feed');
-      const tocContainer = document.getElementById('toc-container');
-      
-      const filtered = db.filter(r => {
-        const matchesQuery = r.name.toLowerCase().includes(query) || 
-                             r.ingredients.some(i => i.toLowerCase().includes(query));
-        
-        const matchesPantry = selectedPantry.every(p => 
-          r.ingredients.some(i => i.toLowerCase().includes(p))
-        );
-
-        return matchesQuery && matchesPantry;
-      });
-
-      if (filtered.length === 0) {
-          tocContainer.innerHTML = '';
-          feed.innerHTML = "<p style='text-align:center; font-style:italic;'>No recipes found.</p>";
-          return;
-      }
-
-      if (sortByMostCooked) {
-        filtered.sort((a, b) => b.timesMade - a.timesMade);
-      }
-
-      const grouped = {};
-      filtered.forEach(r => {
-        if (!grouped[r.category]) grouped[r.category] = [];
-        grouped[r.category].push(r);
-      });
-
-      const categories = Object.keys(grouped).sort();
-
-      if (query === '' && selectedPantry.length === 0 && !sortByMostCooked) {
-        tocContainer.innerHTML = `
-          <div class="toc">
-            <h3>Menu</h3>
-            <div class="toc-grid">
-              ${categories.map(cat => `
-                <div>
-                  <a class="toc-cat" href="#cat-${cat.replace(/\s+/g, '-')}">${cat}</a>
-                  <ul class="toc-recipes">
-                    ${grouped[cat].map(r => `
-                      <li><a href="#rec-${r.id}">${r.name}</a></li>
-                    `).join('')}
-                  </ul>
-                </div>
-              `).join('')}
+            <div class="recipe-notes-container">
+              <label for="notes-${r.id}">Chef's Notes:</label>
+              <textarea 
+                id="notes-${r.id}"
+                placeholder="e.g., Use less chili, sub double cream..." 
+                onchange="saveRecipeNotes('${r.id}', this.value)"
+              >${r.notes || ''}</textarea>
             </div>
           </div>
-        `;
-      } else {
-        tocContainer.innerHTML = ''; 
-      }
-
-      feed.innerHTML = categories.map(cat => `
-          <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
-          ${grouped[cat].map(r => `
-              <div class="recipe" id="rec-${r.id}">
-                  <div class="header">
-                      <div class="title">${r.name}</div>
-                      <div class="rating">
-                          ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
-                      </div>
-                  </div>
-                  <div class="recipe-badges">
-                      ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; background: rgba(228, 215, 196, 0.4); padding: 3px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
-                      <div style="font-size: 0.8em; font-style: italic; color: #7c481d; background: rgba(124, 72, 29, 0.1); padding: 3px 8px; border-radius: 3px; display: inline-block;">
-                          🔥 Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? `(Last: ${r.lastMade})` : ''}
-                      </div>
-                      <button id="made-btn-${r.id}" class="action-btn" style="font-size: 0.75em; padding: 3px 8px; margin-left: auto;" onclick="logMade('${r.id}')">I Made This 🍳</button>
-                  </div>
-                  <div class="ingredients-list">
-                      <strong>Ingredients:</strong>
-                      <ul>
-                          ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
-                      </ul>
-                  </div>
-                  <div class="method">${r.method}</div>
-                  <div class="recipe-notes-container">
-  <label style="font-weight: bold; display: block; margin-top: 10px;">Chef's Notes:</label>
-  <textarea 
-    placeholder="e.g., Use less chili next time, double the garlic..." 
-    onchange="saveRecipeNotes('${r.id}', this.value)"
-    style="width: 100%; min-height: 60px; padding: 6px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;"
-  >${r.notes}</textarea>
-</div>
-              </div>
-          `).join('')}
+        </div>
       `).join('');
     }
 
-    fetchRecipes();
+    function filterRecipes() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const cat = document.getElementById('category-filter').value;
+
+      const filtered = recipes.filter(r => {
+        const matchesQuery = (r.name && r.name.toLowerCase().includes(query)) ||
+                             (r.ingredients && r.ingredients.toLowerCase().includes(query)) ||
+                             (r.notes && r.notes.toLowerCase().includes(query));
+        const matchesCat = !cat || r.category === cat;
+        return matchesQuery && matchesCat;
+      });
+
+      renderRecipes(filtered);
+    }
+
+    async function rateRecipe(id, rating) {
+      try {
+        const res = await fetch(`${INSERT_API_URL}?action=rate&id=${encodeURIComponent(id)}&rating=${rating}`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const target = recipes.find(r => String(r.id) === String(id));
+          if (target) target.rating = rating;
+          renderRecipes(recipes);
+        }
+      } catch (err) {
+        console.error("Error setting rating:", err);
+      }
+    }
+
+    async function logMade(id) {
+      try {
+        const res = await fetch(`${INSERT_API_URL}?action=log_made&id=${encodeURIComponent(id)}`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const target = recipes.find(r => String(r.id) === String(id));
+          if (target) {
+            target.timesMade = data.newCount;
+            target.lastMade = data.lastMade;
+          }
+          renderRecipes(recipes);
+        }
+      } catch (err) {
+        console.error("Error logging cook:", err);
+      }
+    }
+
+    async function saveRecipeNotes(id, notesText) {
+      try {
+        const res = await fetch(`${INSERT_API_URL}?action=update_notes&id=${encodeURIComponent(id)}&notes=${encodeURIComponent(notesText)}`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const target = recipes.find(r => String(r.id) === String(id));
+          if (target) target.notes = notesText;
+        } else {
+          console.error("Failed to save notes:", data.message);
+        }
+      } catch (err) {
+        console.error("Network error saving notes:", err);
+      }
+    }
+
+    window.onload = loadRecipes;
   </script>
 </body>
 </html>
