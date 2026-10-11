@@ -700,7 +700,7 @@ function render() {
       tocContainer.innerHTML = ''; 
     }
 
-   // 1. Build the Next Up box
+ // 1. Build the Next Up box
     let nextUpHTML = '';
     if (nextUp.length > 0) {
       const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
@@ -755,6 +755,14 @@ function render() {
             <!-- leave your existing recipe card code here exactly as it was -->
         `).join('')}
     `).join('');
+        ${grouped[cat].map(r => `
+            <div class="recipe" id="rec-${r.id}">
+                <div class="header">
+                    <div class="title">${r.name}</div>
+                    <div class="rating">
+                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
+                    </div>
+                </div>
                 
                <div class="recipe-badges">
     ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; background: rgba(228, 215, 196, 0.4); padding: 3px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
