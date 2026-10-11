@@ -227,11 +227,7 @@
         <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
       </div>
     </div>
-<div class="header-banner">
-  <img src="banner.jpeg" alt="Kitchen Chaos Banner" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
-</div>
-    <h1>Paul's Recipes (for cooking)</h1>
-    
+    <h1>Paul's Recipes (for cooking)</h1>    
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
       <button class="action-btn" onclick="resetMatrix()" style="background: #d4c4b2;">Reset</button>
@@ -242,12 +238,15 @@
       <span id="pantry-chips-container" style="display: flex; flex-wrap: wrap; gap: 6px;">Loading pantry...</span>
     </div>
 
-    <div id="loader">Flipping pages...</div>
+    <div id="loader">Making myself decent...</div>
     <div id="toc-container"></div>
     <div id="feed"></div>
   </div>
 
   <button id="back-to-top" onclick="scrollToTop()">↑</button>
+<div class="header-banner">
+  <img src="banner.jpeg" alt="Kitchen Chaos Banner" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
+</div>
 
   <!-- Add Recipe Modal -->
   <div id="addModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
