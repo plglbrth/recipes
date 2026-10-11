@@ -138,6 +138,41 @@
        border-color: #6d421d;
      }
 
+    .recipe-notes-container {
+  margin-top: 12px;
+  border-top: 1px dashed #bba38a;
+  padding-top: 8px;
+}
+
+.recipe-notes-container label {
+  font-weight: bold;
+  display: block;
+  font-size: 0.85rem;
+  color: #6d421d;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.recipe-notes-container textarea {
+  width: 100%;
+  min-height: 55px;
+  background-color: #efe7db;
+  border: 1px solid #c8b9a6;
+  border-radius: 4px;
+  color: #4e3e30;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.recipe-notes-container textarea:focus {
+  outline: none;
+  border-color: #5a381a;
+  background-color: #f6efe2;
+}
+
      .toc { 
        margin-bottom: 30px; 
        padding: 15px; 
@@ -601,13 +636,13 @@
                     </ul>
                 </div>
                 <div class="method">${r.method}</div>
-                <div class="recipe-notes-container" style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 8px;">
-                  <label style="font-weight: bold; display: block; font-size: 0.85rem;">Chef's Notes:</label>
-                  <textarea 
-                    onchange="saveRecipeNotes('${r.id}', this.value)"
-                    style="width: 100%; min-height: 50px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit; padding: 4px;"
-                  >${r.notes || ''}</textarea>
-                </div>
+              <div class="recipe-notes-container">
+  <label>Chef's Notes:</label>
+  <textarea 
+    onchange="saveRecipeNotes('${r.id}', this.value)" 
+    placeholder="Add tweaks, subs, or warnings..."
+  >${r.notes || ''}</textarea>
+</div>
             </div>
         `).join('')}
     `).join('');
