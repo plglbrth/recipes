@@ -346,7 +346,21 @@
         })
         .catch(err => alert('Network error submitting recipe.'));
     }
-
+async function saveRecipeNotes(id, notesText) {
+  try {
+    const response = await fetch(`${INSERT_API_URL}?action=update_notes&id=${encodeURIComponent(id)}&notes=${encodeURIComponent(notesText)}`);
+    const data = await response.json();
+    if (data.status === 'success') {
+      // Find local object in state and update it so it survives filtering without re-fetch
+      const target = recipes.find(r => String(r.id) === String(id));
+      if (target) target.notes = notesText;
+    } else {
+      console.error("Failed to save notes:", data.message);
+    }
+  } catch (err) {
+    console.error("Network error saving notes:", err);
+  }
+}   
   function logMade(id) {
   const btn = document.getElementById(`made-btn-${id}`);
   if (btn) btn.textContent = 'Logging...';
@@ -482,6 +496,7 @@
                 drink: cols[6] || '',
                 lastMade: cols[7] || '',
                 timesMade: parseInt(cols[8]) || 0
+                notes: cols[9] || ""
               });
             }
           }
@@ -587,6 +602,14 @@ window.rate = function(id, stars) {
                       </ul>
                   </div>
                   <div class="method">${r.method}</div>
+                  <div class="recipe-notes-container">
+  <label style="font-weight: bold; display: block; margin-top: 10px;">Chef's Notes:</label>
+  <textarea 
+    placeholder="e.g., Use less chili next time, double the garlic..." 
+    onchange="saveRecipeNotes('${r.id}', this.value)"
+    style="width: 100%; min-height: 60px; padding: 6px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit;"
+  >${r.notes}</textarea>
+</div>
               </div>
           `).join('')}
       `).join('');
