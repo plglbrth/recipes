@@ -700,7 +700,7 @@ function render() {
       tocContainer.innerHTML = ''; 
     }
 
-    // 1. GENERATE THE NEXT UP PANEL HTML HERE
+   // 1. Build the Next Up box
     let nextUpHTML = '';
     if (nextUp.length > 0) {
       const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
@@ -722,17 +722,39 @@ function render() {
       `;
     }
 
-    // 2. PREPEND nextUpHTML BEFORE THE CATEGORIES
-    feed.innerHTML = nextUpHTML + categories.map(cat => `
+    // 2. Put Next Up FIRST inside the Menu box, then build collapsible categories
+    if (query === '' && selectedPantry.length === 0 && !sortByMostCooked && !filterForgottenGems) {
+      tocContainer.innerHTML = nextUpHTML + `
+        <div class="toc">
+          <h3>Menu</h3>
+          <div class="toc-grid">
+            ${categories.map(cat => `
+              <details style="margin-bottom: 8px;">
+                <summary style="cursor: pointer; font-weight: bold; color: #5a381a;">
+                  ${cat} (${grouped[cat].length})
+                </summary>
+                <ul class="toc-recipes" style="margin: 4px 0 8px 12px; padding-left: 10px;">
+                  ${grouped[cat].map(r => `
+                    <li><a href="#rec-${r.id}">${r.name}</a></li>
+                  `).join('')}
+                </ul>
+              </details>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      // Keep Next Up visible even when searching
+      tocContainer.innerHTML = nextUpHTML;
+    }
+
+    // 3. Render the recipe feed WITHOUT prepending nextUpHTML here
+    feed.innerHTML = categories.map(cat => `
         <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
         ${grouped[cat].map(r => `
-            <div class="recipe" id="rec-${r.id}">
-                <div class="header">
-                    <div class="title">${r.name}</div>
-                    <div class="rating">
-                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
-                    </div>
-                </div>
+            <!-- leave your existing recipe card code here exactly as it was -->
+        `).join('')}
+    `).join('');
                 
                <div class="recipe-badges">
     ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; background: rgba(228, 215, 196, 0.4); padding: 3px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
