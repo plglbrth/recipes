@@ -380,7 +380,18 @@
     setTimeout(fetchRecipes, 1500);
   });
 }
-
+async function saveRecipeNotes(id, notesText) {
+  try {
+    const res = await fetch(`${INSERT_API_URL}?action=update_notes&id=${encodeURIComponent(id)}&notes=${encodeURIComponent(notesText)}`);
+    const data = await res.json();
+    if (data.status === 'success') {
+      const target = recipes.find(r => String(r.id) === String(id));
+      if (target) target.notes = notesText;
+    }
+  } catch (err) {
+    console.error("Error saving notes:", err);
+  }
+}
     function generatePantryChips() {
       const curatedPantry = [
         'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
@@ -482,6 +493,7 @@
                 drink: cols[6] || '',
                 lastMade: cols[7] || '',
                 timesMade: parseInt(cols[8]) || 0
+                notes: cols[9] || ""
               });
             }
           }
@@ -573,6 +585,7 @@ window.rate = function(id, stars) {
                           ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
                       </div>
                   </div>
+                  
                   <div class="recipe-badges">
                       ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; background: rgba(228, 215, 196, 0.4); padding: 3px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
                       <div style="font-size: 0.8em; font-style: italic; color: #7c481d; background: rgba(124, 72, 29, 0.1); padding: 3px 8px; border-radius: 3px; display: inline-block;">
@@ -587,6 +600,13 @@ window.rate = function(id, stars) {
                       </ul>
                   </div>
                   <div class="method">${r.method}</div>
+                  <div class="recipe-notes-container" style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 8px;">
+  <label style="font-weight: bold; display: block; font-size: 0.85rem;">Chef's Notes:</label>
+  <textarea 
+    onchange="saveRecipeNotes('${r.id}', this.value)"
+    style="width: 100%; min-height: 50px; border-radius: 4px; border: 1px solid #ccc; font-family: inherit; padding: 4px;"
+  >${r.notes || ''}</textarea>
+</div>
               </div>
           `).join('')}
       `).join('');
