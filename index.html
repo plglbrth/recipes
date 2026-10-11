@@ -247,6 +247,52 @@
        box-shadow: 0 3px 10px rgba(0,0,0,0.3);
        z-index: 1000;
      }
+    .next-up-panel {
+  background: rgba(90, 56, 26, 0.08);
+  border: 1px solid #5a381a;
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 25px;
+}
+
+.next-up-panel h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #5a381a;
+  font-style: italic;
+}
+
+.next-up-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.next-up-item {
+  background: #f6efe2;
+  border: 1px solid #c8b9a6;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.next-up-item a {
+  color: #2b221a;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.next-up-remove {
+  color: #8b0000;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  background: none;
+  padding: 0 2px;
+}
   </style>
 </head>
 <body>
@@ -297,6 +343,24 @@
   const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
   const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz-eWkTyhE0JpGl8GxvVvXllX3Y4NJpqfKRYzA9VnbQ0TQGmhOC70VYBRH_fiOyFdcr/exec";
   let db = [];
+  let nextUp = JSON.parse(localStorage.getItem('nextUpRecipes') || '[]');
+
+function toggleNextUp(id) {
+  const index = nextUp.indexOf(String(id));
+  if (index > -1) {
+    nextUp.splice(index, 1);
+  } else {
+    nextUp.push(String(id));
+  }
+  localStorage.setItem('nextUpRecipes', JSON.stringify(nextUp));
+  render();
+}
+
+function clearNextUp() {
+  nextUp = [];
+  localStorage.removeItem('nextUpRecipes');
+  render();
+}
   let wakeLock = null;
   let selectedPantry = [];
   let sortByMostCooked = false;
@@ -359,6 +423,7 @@
     if (Array.isArray(recipe.ingredients)) {
       ingredientsStr = recipe.ingredients.join('|');
     }
+
 
     const params = new URLSearchParams({
       name: recipe.name || recipe.title || 'Untitled Recipe',
@@ -555,7 +620,7 @@
     }
   };
 
-  function render() {
+function render() {
     const query = document.getElementById('search').value.toLowerCase();
     const feed = document.getElementById('feed');
     const tocContainer = document.getElementById('toc-container');
@@ -611,7 +676,30 @@
       tocContainer.innerHTML = ''; 
     }
 
-    feed.innerHTML = categories.map(cat => `
+    // 1. GENERATE THE NEXT UP PANEL HTML HERE
+    let nextUpHTML = '';
+    if (nextUp.length > 0) {
+      const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
+      nextUpHTML = `
+        <div class="next-up-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+            <h3 style="margin:0;">Next Up This Week (${pinnedRecipes.length})</h3>
+            <button class="action-btn" onclick="clearNextUp()" style="font-size: 0.7em; padding: 2px 6px; background:#d4c4b2;">Clear All</button>
+          </div>
+          <div class="next-up-list">
+            ${pinnedRecipes.map(r => `
+              <div class="next-up-item">
+                <a href="#rec-${r.id}">${r.name}</a>
+                <button class="next-up-remove" onclick="toggleNextUp('${r.id}')">x</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // 2. PREPEND nextUpHTML BEFORE THE CATEGORIES
+    feed.innerHTML = nextUpHTML + categories.map(cat => `
         <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
         ${grouped[cat].map(r => `
             <div class="recipe" id="rec-${r.id}">
@@ -627,6 +715,12 @@
                     <div style="font-size: 0.8em; font-style: italic; color: #7c481d; background: rgba(124, 72, 29, 0.1); padding: 3px 8px; border-radius: 3px; display: inline-block;">
                         Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${r.lastMade})` : ''}
                     </div>
+                    <button 
+                      class="action-btn ${nextUp.includes(String(r.id)) ? 'active' : ''}" 
+                      style="font-size: 0.75em; padding: 3px 8px;" 
+                      onclick="toggleNextUp('${r.id}')">
+                      ${nextUp.includes(String(r.id)) ? 'Remove Plan' : '+ Plan'}
+                    </button>
                     <button id="made-btn-${r.id}" class="action-btn" style="font-size: 0.75em; padding: 3px 8px; margin-left: auto;" onclick="logMade('${r.id}')">I Made This</button>
                 </div>
                 <div class="ingredients-list">
@@ -636,19 +730,19 @@
                     </ul>
                 </div>
                 <div class="method">${r.method}</div>
-              <div class="recipe-notes-container">
-  <label>Chef's Notes:</label>
-  <textarea 
-    onchange="saveRecipeNotes('${r.id}', this.value)" 
-    placeholder="Add tweaks, subs, or warnings..."
-  >${r.notes || ''}</textarea>
-</div>
+                <div class="recipe-notes-container">
+                  <label>Chef's Notes:</label>
+                  <textarea 
+                    onchange="saveRecipeNotes('${r.id}', this.value)"
+                  >${r.notes || ''}</textarea>
+                </div>
             </div>
         `).join('')}
     `).join('');
   }
 
   fetchRecipes();
+  
 </script>
 </body>
 </html>
