@@ -302,6 +302,7 @@
         <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
         <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
         <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
+        <button id="forgottenGemsBtn" class="action-btn" onclick="toggleForgottenGems()">Forgotten Gems: OFF</button>
       </div>
       <div class="action-group">
         <button id="sortMostCookedBtn" class="action-btn" onclick="toggleMostCooked()">Most Cooked: OFF</button>
@@ -344,7 +345,20 @@
   const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz-eWkTyhE0JpGl8GxvVvXllX3Y4NJpqfKRYzA9VnbQ0TQGmhOC70VYBRH_fiOyFdcr/exec";
   let db = [];
   let nextUp = JSON.parse(localStorage.getItem('nextUpRecipes') || '[]');
+let filterForgottenGems = false;
 
+function toggleForgottenGems() {
+  filterForgottenGems = !filterForgottenGems;
+  const btn = document.getElementById('forgottenGemsBtn');
+  if (filterForgottenGems) {
+    btn.textContent = 'Forgotten Gems: ON';
+    btn.classList.add('active');
+  } else {
+    btn.textContent = 'Forgotten Gems: OFF';
+    btn.classList.remove('active');
+  }
+  render();
+}
 function toggleNextUp(id) {
   const index = nextUp.indexOf(String(id));
   if (index > -1) {
@@ -621,20 +635,30 @@ function clearNextUp() {
   };
 
 function render() {
-    const query = document.getElementById('search').value.toLowerCase();
-    const feed = document.getElementById('feed');
-    const tocContainer = document.getElementById('toc-container');
-    
-    const filtered = db.filter(r => {
-      const matchesQuery = r.name.toLowerCase().includes(query) || 
-                           r.ingredients.some(i => i.toLowerCase().includes(query));
-      
-      const matchesPantry = selectedPantry.every(p => 
-        r.ingredients.some(i => i.toLowerCase().includes(p))
-      );
+  const query = document.getElementById('search').value.toLowerCase();
+  const feed = document.getElementById('feed');
+  const tocContainer = document.getElementById('toc-container');
+  
+  // Calculate date string for 90 days ago (YYYY-MM-DD)
+  const ninetyDaysAgo = new Date(Date.now() - (90 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
 
-      return matchesQuery && matchesPantry;
-    });
+  const filtered = db.filter(r => {
+    const matchesQuery = r.name.toLowerCase().includes(query) || 
+                         r.ingredients.some(i => i.toLowerCase().includes(query));
+    
+    const matchesPantry = selectedPantry.every(p => 
+      r.ingredients.some(i => i.toLowerCase().includes(p))
+    );
+
+    let matchesForgotten = true;
+    if (filterForgottenGems) {
+      // Must be made at least once, and last cooked over 90 days ago or missing a date
+      const isOld = !r.lastMade || r.lastMade < ninetyDaysAgo;
+      matchesForgotten = r.timesMade > 0 && isOld;
+    }
+
+    return matchesQuery && matchesPantry && matchesForgotten;
+  });
 
     if (filtered.length === 0) {
         tocContainer.innerHTML = '';
