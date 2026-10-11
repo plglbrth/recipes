@@ -349,31 +349,39 @@
         .catch(err => alert('Network error submitting recipe.'));
     }
 
-    function logMade(id) {
-      const btn = document.getElementById(`made-btn-${id}`);
-      if (btn) btn.textContent = 'Logging...';
+  function logMade(id) {
+  const btn = document.getElementById(`made-btn-${id}`);
+  if (btn) btn.textContent = 'Logging...';
 
-      fetch(`${INSERT_API_URL}?action=log_made&id=${id}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            const recipe = db.find(r => r.id === id);
-            if (recipe) {
-              recipe.timesMade = data.newCount;
-              const today = new Date().toISOString().split('T')[0];
-              recipe.lastMade = today;
-            }
-            render();
-          } else {
-            alert('Error logging recipe: ' + (data.message || 'Unknown'));
-            if (btn) btn.textContent = 'I Made This 🍳';
-          }
-        })
-        .catch(err => {
-          alert('Network error logging recipe.');
-          if (btn) btn.textContent = 'I Made This 🍳';
-        });
+  fetch(`${INSERT_API_URL}?action=log_made&id=${id}`, {
+    method: 'GET',
+    redirect: 'follow'
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'success') {
+      const recipe = db.find(r => r.id === id);
+      if (recipe) {
+        recipe.timesMade = data.newCount;
+        recipe.lastMade = new Date().toISOString().split('T')[0];
+      }
+      render();
+    } else {
+      alert('Error logging recipe: ' + (data.message || 'Unknown'));
+      if (btn) btn.textContent = 'I Made This 🍳';
     }
+  })
+  .catch(err => {
+    // Fallback: If browser blocks JSON read due to redirect CORS, state updates locally and re-fetches sheet after 1s
+    const recipe = db.find(r => r.id === id);
+    if (recipe) {
+      recipe.timesMade = (recipe.timesMade || 0) + 1;
+      recipe.lastMade = new Date().toISOString().split('T')[0];
+      render();
+    }
+    setTimeout(fetchRecipes, 1500);
+  });
+}
 
     function generatePantryChips() {
       const curatedPantry = [
@@ -488,23 +496,18 @@
         });
     }
 
-  window.rate = function(id, stars) {
-      const r = db.find(x => x.id === id);
-      if(r) {
-        r.rating = stars;
-        render(); 
+window.rate = function(id, stars) {
+  const r = db.find(x => x.id === id);
+  if (r) {
+    r.rating = stars;
+    render(); 
 
-        // Send rating to Google Sheet backend
-        fetch(`${INSERT_API_URL}?action=rate&id=${id}&rating=${stars}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.status !== 'success') {
-              console.error('Failed to save rating to sheet.');
-            }
-          })
-          .catch(err => console.error('Network error saving rating.'));
-      }
-    };
+    fetch(`${INSERT_API_URL}?action=rate&id=${id}&rating=${stars}`, {
+      method: 'GET',
+      redirect: 'follow'
+    }).catch(err => console.error('Rating sync error:', err));
+  }
+};
 
     function render() {
       const query = document.getElementById('search').value.toLowerCase();
