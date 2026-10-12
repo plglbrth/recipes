@@ -458,6 +458,14 @@
   let nextUp = JSON.parse(localStorage.getItem('nextUpRecipes') || '[]');
 let filterForgottenGems = false;
 
+  const PANTRY_CATEGORIES = {
+  "Produce": ["Garlic", "Onions", "Lemons", "Limes", "Fresh Chillies", "Ginger"],
+  "Protein & Dairy": ["Eggs", "Unsalted Butter", "Milk", "Parmesan", "Cheddar", "Chicken Breast"],
+  "Storecupboard": ["Passata", "Soy Sauce", "Olive Oil", "Vegetable Oil", "Rice", "Pasta"],
+  "Spices & Seasoning": ["Coarse Sea Salt", "Black Pepper", "Smoked Paprika", "Cumin", "Chilli Flakes", "Garam Masala"],
+  "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
+};
+  
 function toggleForgottenGems() {
   filterForgottenGems = !filterForgottenGems;
   const btn = document.getElementById('forgottenGemsBtn');
@@ -507,7 +515,7 @@ function clearNextUp() {
       } catch (err) {}
     }
   }
-
+  
   function toggleMostCooked() {
     sortByMostCooked = !sortByMostCooked;
     const btn = document.getElementById('sortMostCookedBtn');
@@ -520,29 +528,6 @@ function clearNextUp() {
     }
     render();
   }
-
-  function renderPantryDrawer() {
-  return `
-    <details class="pantry-drawer">
-      <summary class="pantry-toggle">Pantry Quick-Add</summary>
-      <div class="pantry-content">
-        ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
-          <div class="pantry-group">
-            <span class="pantry-group-title">${category}</span>
-            <div class="pantry-chips">
-              ${items.map(item => `
-                <button class="pantry-chip ${pantryList.includes(item) ? 'active' : ''}" 
-                        onclick="togglePantryItem('${item.replace(/'/g, "\\'")}')">
-                  ${item}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </details>
-  `;
-}
   
   function openAddModal() {
     document.getElementById('addModal').style.display = 'flex';
@@ -723,6 +708,29 @@ function clearNextUp() {
     return ret;
   }
 
+  function renderPantryDrawer() {
+  return `
+    <details class="pantry-drawer">
+      <summary class="pantry-toggle">Pantry Quick-Add</summary>
+      <div class="pantry-content">
+        ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
+          <div class="pantry-group">
+            <span class="pantry-group-title">${category}</span>
+            <div class="pantry-chips">
+              ${items.map(item => `
+                <button class="pantry-chip ${pantryList.includes(item) ? 'active' : ''}" 
+                        onclick="togglePantryItem('${item.replace(/'/g, "\\'")}')">
+                  ${item}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </details>
+  `;
+}
+  
   function fetchRecipes() {
     fetch(CSV_URL)
       .then(response => response.text())
@@ -849,14 +857,6 @@ function render() {
   });
 
   const categories = Object.keys(grouped).sort();
-
-  const PANTRY_CATEGORIES = {
-  "Produce": ["Garlic", "Onions", "Lemons", "Limes", "Fresh Chillies", "Ginger"],
-  "Protein & Dairy": ["Eggs", "Unsalted Butter", "Milk", "Parmesan", "Cheddar", "Chicken Breast"],
-  "Storecupboard": ["Passata", "Soy Sauce", "Olive Oil", "Vegetable Oil", "Rice", "Pasta"],
-  "Spices & Seasoning": ["Coarse Sea Salt", "Black Pepper", "Smoked Paprika", "Cumin", "Chilli Flakes", "Garam Masala"],
-  "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
-};
   
 // 1. Build Next Up box with divided Shopping List & "Already Have" bundle
   let nextUpHTML = '';
