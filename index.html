@@ -265,8 +265,33 @@
      .title { font-size: 1.4em; font-weight: bold; }
      .rating { cursor: pointer; font-size: 1.2em; color: rgba(0, 0, 0, 0.1); }
      .rating .active { color: #7c481d; }
-     .recipe-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
-     .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
+.recipe-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.badge {
+  font-size: 0.8em;
+  font-style: italic;
+  padding: 4px 8px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-drink {
+  color: #5a381a;
+  background: rgba(228, 215, 196, 0.4);
+}
+
+.badge-cooked {
+  color: #7c481d;
+  background: rgba(124, 72, 29, 0.1);
+}     .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
      .ingredients-list strong { color: #1a130b; }
      .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
      .ingredients-list li { margin-bottom: 3px; }
@@ -896,18 +921,26 @@ function render() {
                   </div>
               </div>
               
-              <div class="recipe-badges">
-                  ${r.drink ? `<div style="font-size: 0.85em; font-style: italic; color: #5a381a; background: rgba(228, 215, 196, 0.4); padding: 3px 8px; border-radius: 3px; display: inline-block;">🍷 Pour: ${r.drink}</div>` : ''}
-                  <div style="font-size: 0.8em; font-style: italic; color: #7c481d; background: rgba(124, 72, 29, 0.1); padding: 3px 8px; border-radius: 3px; display: inline-block;">
-${Number(r.timesMade) > 0 ? `🔥 Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}               
-<button class="action-btn ${nextUp.includes(String(r.id)) ? 'active' : ''}" 
-                    style="font-size: 0.75em; padding: 3px 8px;" 
-                    onclick="toggleNextUp('${r.id}')">
-                    ${nextUp.includes(String(r.id)) ? 'Remove Plan' : '+ Plan'}
-                  </button>
-                  <button id="made-btn-${r.id}" class="action-btn" style="font-size: 0.75em; padding: 3px 8px; margin-left: auto;" onclick="logMade('${r.id}')">I Made This 🍳</button>
-              </div>
-              </div>
+<div class="recipe-badges">
+  ${r.drink ? `<span class="badge badge-drink">🍷 Pour: ${r.drink}</span>` : ''}
+  
+  <span class="badge badge-cooked">
+    ${Number(r.timesMade) > 0 ? `🔥 Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}
+  </span>
+
+  <button class="action-btn ${nextUp.includes(String(r.id)) ? 'active' : ''}" 
+          style="font-size: 0.75em; padding: 4px 8px;" 
+          onclick="toggleNextUp('${r.id}')">
+    ${nextUp.includes(String(r.id)) ? 'Remove Plan' : '+ Plan'}
+  </button>
+
+  <button id="made-btn-${r.id}" 
+          class="action-btn" 
+          style="font-size: 0.75em; padding: 4px 8px;" 
+          onclick="logMade('${r.id}')">
+    I Made This 🍳
+  </button>
+</div>
               <div class="ingredients-list">
 <strong class="section-title">Ingredients:</strong>                  <ul>
                       ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
