@@ -473,35 +473,37 @@
     "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
   };
 
-  function renderPantryDrawer() {
-    return `
-      <details class="pantry-drawer">
-        <summary class="pantry-toggle">Pantry Quick-Add</summary>
-        <div class="pantry-content">
-          ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
-            <div class="pantry-group">
-              <span class="pantry-group-title">${category}</span>
-              <div class="pantry-chips">
-                ${items.map(item => `
-                  <button class="pantry-chip ${selectedPantry.includes(item.toLowerCase()) ? 'active' : ''}" 
-                          onclick="togglePantry('${item.toLowerCase().replace(/'/g, "\\'")}')">
-                    ${item}
-                  </button>
-                `).join('')}
-              </div>
+function renderPantryDrawer(isOpen = false) {
+  return `
+    <details class="pantry-drawer" ${isOpen ? 'open' : ''}>
+      <summary class="pantry-toggle">Pantry</summary>
+      <div class="pantry-content">
+        ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
+          <div class="pantry-group">
+            <span class="pantry-group-title">${category}</span>
+            <div class="pantry-chips">
+              ${items.map(item => `
+                <button class="pantry-chip ${selectedPantry.includes(item.toLowerCase()) ? 'active' : ''}" 
+                        onclick="togglePantry('${item.toLowerCase().replace(/'/g, "\\'")}')">
+                  ${item}
+                </button>
+              `).join('')}
             </div>
-          `).join('')}
-        </div>
-      </details>
-    `;
-  }
+          </div>
+        `).join('')}
+      </div>
+    </details>
+  `;
+}
 
-  function generatePantryChips() {
-    const container = document.getElementById('pantry-drawer-container');
-    if (container) {
-      container.innerHTML = renderPantryDrawer();
-    }
+function generatePantryChips() {
+  const container = document.getElementById('pantry-drawer-container');
+  if (container) {
+    const existingDrawer = container.querySelector('.pantry-drawer');
+    const isOpen = existingDrawer ? existingDrawer.open : false;
+    container.innerHTML = renderPantryDrawer(isOpen);
   }
+}
 
   function togglePantry(item) {
     const index = selectedPantry.indexOf(item);
