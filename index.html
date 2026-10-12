@@ -266,8 +266,21 @@
      .ingredients-list strong { color: #1a130b; }
      .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
      .ingredients-list li { margin-bottom: 3px; }
-     .method { white-space: pre-line; margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(43, 34, 26, 0.1); color: #35291d; line-height: 1.7; }
-     #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
+.method { 
+  margin-top: 15px; 
+  padding-top: 12px; 
+  border-top: 1px dashed rgba(43, 34, 26, 0.1); 
+  color: #35291d; 
+}
+
+.method-step {
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+.method-step:last-child {
+  margin-bottom: 0;
+}     #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
 
      #back-to-top {
        position: fixed;
@@ -889,8 +902,18 @@ function render() {
                       ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
                   </ul>
               </div>
-              <div class="method">${r.method}</div>
-              <div class="recipe-notes-container">
+<div class="method">
+  ${(() => {
+    if (!r.method) return '';
+    // Splits on step numbers (e.g. "1.", "2.") or newlines, ignoring empty padding
+    const steps = r.method
+      .split(/(?=\b\d+\.\s*)|\n+/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    return steps.map(step => `<p class="method-step">${step}</p>`).join('');
+  })()}
+</div>              <div class="recipe-notes-container">
                 <label>Chef's Notes:</label>
                 <textarea 
                   onchange="saveRecipeNotes('${r.id}', this.value)"
