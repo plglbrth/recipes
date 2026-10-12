@@ -677,23 +677,34 @@ function render() {
 
   const categories = Object.keys(grouped).sort();
 
-// 1. Build the Next Up box with Shopping List accordion
+// 1. Build the Next Up box with Interactive Shopping Checklist
   let nextUpHTML = '';
   if (nextUp.length > 0) {
     const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
 
-    // Extract unique ingredients across all pinned recipes
+    // Helper function to strip quantities and measurements
+    const cleanIngredient = (str) => {
+      return str
+        .replace(/^\s*[\d\/\.\-\s]+(?:\s*(?:tsp|tbsp|g|kg|ml|l|oz|lbs?|cups?|cloves?|cans?|tins?|handfuls?|pinches?|bunches?|tbsp\.|tsp\.)\b)?(?:\s+of\b)?\s*/i, '')
+        .replace(/^(?:pinch|handful)\s+of\s+/i, '')
+        .trim();
+    };
+
+    // Extract, clean, and deduplicate ingredients
     const seen = new Set();
     const shoppingList = [];
     
     pinnedRecipes.forEach(r => {
       if (Array.isArray(r.ingredients)) {
         r.ingredients.forEach(i => {
-          const clean = i.trim();
-          const lower = clean.toLowerCase();
-          if (clean && !seen.has(lower)) {
-            seen.add(lower);
-            shoppingList.push(clean);
+          let clean = cleanIngredient(i);
+          if (clean) {
+            clean = clean.charAt(0).toUpperCase() + clean.slice(1);
+            const lower = clean.toLowerCase();
+            if (!seen.has(lower)) {
+              seen.add(lower);
+              shoppingList.push(clean);
+            }
           }
         });
       }
@@ -719,9 +730,14 @@ function render() {
           <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 0.9em;">
             Shopping List (${shoppingList.length} items)
           </summary>
-          <ul style="margin: 8px 0 0 12px; padding-left: 10px; font-size: 0.85em; color: #3b2f23;">
-            ${shoppingList.map(item => `<li>${item}</li>`).join('')}
-          </ul>
+          <div style="margin: 8px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
+            ${shoppingList.map(item => `
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;">
+                <input type="checkbox" style="accent-color: #5a381a; cursor: pointer;" onchange="this.nextElementSibling.style.textDecoration = this.checked ? 'line-through' : 'none'; this.nextElementSibling.style.opacity = this.checked ? '0.5' : '1';">
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
         </details>
       </div>
     `;
