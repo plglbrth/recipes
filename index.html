@@ -153,7 +153,12 @@
   font-style: italic;
   margin-bottom: 4px;
 }
-
+.recipe-card strong.section-title {
+  color: #1a130b;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
 .recipe-notes-container textarea {
   width: 100%;
   min-height: 55px;
@@ -897,14 +902,12 @@ function render() {
                   <button id="made-btn-${r.id}" class="action-btn" style="font-size: 0.75em; padding: 3px 8px; margin-left: auto;" onclick="logMade('${r.id}')">I Made This 🍳</button>
               </div>
               <div class="ingredients-list">
-                  <strong>Ingredients:</strong>
-                  <ul>
+<strong class="section-title">Ingredients:</strong>                  <ul>
                       ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
                   </ul>
               </div>
 <div class="method">
-  <strong style="color: #1a130b; display: block; margin-bottom: 10px;">Method:</strong>
-  ${(() => {
+<strong class="section-title">Method:</strong>  ${(() => {
     if (!r.method) return '';
     const steps = r.method
       .split(/(?=\b\d+\.\s*)|\n+/)
