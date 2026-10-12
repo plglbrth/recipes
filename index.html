@@ -677,17 +677,36 @@ function render() {
 
   const categories = Object.keys(grouped).sort();
 
-  // 1. Build the Next Up panel HTML
+// 1. Build the Next Up box with Shopping List accordion
   let nextUpHTML = '';
   if (nextUp.length > 0) {
     const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
+
+    // Extract unique ingredients across all pinned recipes
+    const seen = new Set();
+    const shoppingList = [];
+    
+    pinnedRecipes.forEach(r => {
+      if (Array.isArray(r.ingredients)) {
+        r.ingredients.forEach(i => {
+          const clean = i.trim();
+          const lower = clean.toLowerCase();
+          if (clean && !seen.has(lower)) {
+            seen.add(lower);
+            shoppingList.push(clean);
+          }
+        });
+      }
+    });
+    shoppingList.sort((a, b) => a.localeCompare(b));
+
     nextUpHTML = `
       <div class="next-up-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
           <h3 style="margin:0;">Next Up This Week (${pinnedRecipes.length})</h3>
           <button class="action-btn" onclick="clearNextUp()" style="font-size: 0.7em; padding: 2px 6px; background:#d4c4b2;">Clear All</button>
         </div>
-        <div class="next-up-list">
+        <div class="next-up-list" style="margin-bottom: 10px;">
           ${pinnedRecipes.map(r => `
             <div class="next-up-item">
               <a href="#rec-${r.id}">${r.name}</a>
@@ -695,6 +714,15 @@ function render() {
             </div>
           `).join('')}
         </div>
+
+        <details style="border-top: 1px dashed #c8b9a6; padding-top: 8px; margin-top: 8px;">
+          <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 0.9em;">
+            Shopping List (${shoppingList.length} items)
+          </summary>
+          <ul style="margin: 8px 0 0 12px; padding-left: 10px; font-size: 0.85em; color: #3b2f23;">
+            ${shoppingList.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </details>
       </div>
     `;
   }
