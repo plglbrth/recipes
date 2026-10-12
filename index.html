@@ -5,405 +5,408 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Paul's Recipes (for cooking)</title>
   <style>
-     body { 
-       background-color: #cbbaa7; 
-       background-image: 
-         radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.15) 1px, transparent 150px),
-         radial-gradient(circle at 75% 60%, rgba(90, 55, 30, 0.15) 1px, transparent 120px),
-         radial-gradient(circle at 10% 85%, rgba(0,0,0,0.08) 2px, transparent 200px);
-       color: #2b221a; 
-       font-family: 'Georgia', serif; 
-       font-size: 17px;
-       padding: 12px; 
-       line-height: 1.6; 
-       box-sizing: border-box;
-     }
-     
-     .book { 
-       max-width: 800px; 
-       margin: 0 auto; 
-       background-color: #f6efe2; 
-       background-image: 
-         radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 8px),
-         radial-gradient(circle at 80% 25%, transparent 40px, rgba(100, 60, 30, 0.25) 41px, rgba(100, 60, 30, 0.12) 43px, transparent 48px),
-         radial-gradient(circle at 81.5% 24.5%, rgba(100, 60, 30, 0.3) 1px, transparent 12px),
-         radial-gradient(circle at 35% 72%, transparent 35px, rgba(90, 48, 20, 0.2) 36px, rgba(90, 48, 20, 0.08) 38px, transparent 42px),
-         radial-gradient(ellipse at 88% 70%, rgba(90, 48, 20, 0.12) 0%, rgba(90, 48, 20, 0.08) 40%, transparent 70%),
-         radial-gradient(circle at 0% 0%, rgba(90, 48, 20, 0.15) 0%, transparent 30%),
-         radial-gradient(circle at 100% 100%, rgba(70, 40, 15, 0.15) 0%, transparent 40%),
-         radial-gradient(ellipse at center, transparent 30%, rgba(90, 48, 20, 0.15) 100%);
-       padding: 20px; 
-       box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 0 40px rgba(90, 50, 20, 0.08); 
-       border-radius: 4px; 
-       border-left: 8px solid #5a381a; 
-       position: relative;
-       box-sizing: border-box;
-     }
+    body { 
+      background-color: #cbbaa7; 
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.15) 1px, transparent 150px),
+        radial-gradient(circle at 75% 60%, rgba(90, 55, 30, 0.15) 1px, transparent 120px),
+        radial-gradient(circle at 10% 85%, rgba(0,0,0,0.08) 2px, transparent 200px);
+      color: #2b221a; 
+      font-family: 'Georgia', serif; 
+      font-size: 17px;
+      padding: 12px; 
+      line-height: 1.6; 
+      box-sizing: border-box;
+    }
 
-     @media (min-width: 600px) {
-       body { padding: 25px; }
-       .book { padding: 45px; border-left-width: 12px; }
-     }
-     
-     .book::after {
-       content: "";
-       position: absolute;
-       top: 0; left: 0; right: 0; bottom: 0;
-       pointer-events: none;
-       background-image:
-         radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 2px),
-         radial-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
-       background-size: 140px 170px, 83px 97px;
-       opacity: 0.85;
-     }
+    .book { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      background-color: #f6efe2; 
+      background-image: 
+        radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 8px),
+        radial-gradient(circle at 80% 25%, transparent 40px, rgba(100, 60, 30, 0.25) 41px, rgba(100, 60, 30, 0.12) 43px, transparent 48px),
+        radial-gradient(circle at 81.5% 24.5%, rgba(100, 60, 30, 0.3) 1px, transparent 12px),
+        radial-gradient(circle at 35% 72%, transparent 35px, rgba(90, 48, 20, 0.2) 36px, rgba(90, 48, 20, 0.08) 38px, transparent 42px),
+        radial-gradient(ellipse at 88% 70%, rgba(90, 48, 20, 0.12) 0%, rgba(90, 48, 20, 0.08) 40%, transparent 70%),
+        radial-gradient(circle at 0% 0%, rgba(90, 48, 20, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(70, 40, 15, 0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at center, transparent 30%, rgba(90, 48, 20, 0.15) 100%);
+      padding: 20px; 
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 0 40px rgba(90, 50, 20, 0.08); 
+      border-radius: 4px; 
+      border-left: 8px solid #5a381a; 
+      position: relative;
+      box-sizing: border-box;
+    }
 
-     .header-nav {
-       display: flex;
-       justify-content: space-between;
-       align-items: center;
-       flex-wrap: wrap;
-       gap: 10px;
-       margin-bottom: 20px;
-       padding-bottom: 15px;
-       border-bottom: 1px dashed #d4c4b2;
-     }
+    @media (min-width: 600px) {
+      body { padding: 25px; }
+      .book { padding: 45px; border-left-width: 12px; }
+    }
 
-     .action-group {
-       display: flex;
-       gap: 8px;
-       flex-wrap: wrap;
-     }
+    .book::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 2px),
+        radial-gradient(rgba(0,0,0,0.15) 1px, transparent 1px);
+      background-size: 140px 170px, 83px 97px;
+      opacity: 0.85;
+    }
 
-     .action-btn {
-       background: #e4d7c4;
-       border: 1px solid #c8b9a6;
-       color: #5a381a;
-       padding: 6px 12px;
-       font-family: inherit;
-       font-size: 0.8em;
-       cursor: pointer;
-       border-radius: 4px;
-       transition: all 0.2s;
-       font-weight: bold;
-     }
-     .action-btn:hover {
-       background: #d4c4b2;
-     }
-     .action-btn.active {
-       background: #5a381a;
-       color: #f6efe2;
-     }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed #d4c4b2;
+    }
 
-     h1 { 
-       text-align: center; 
-       border-bottom: 2px solid #2b221a; 
-       padding-bottom: 15px; 
-       font-weight: normal; 
-       font-size: 2.4em; 
-       margin-top: 5px; ${Number(r.timesMade) > 0 ? `🔥 Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}
-       margin-bottom: 20px;
-       font-style: italic;
-       letter-spacing: 1px;
-     }
+    .action-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-     h2 { 
-       color: #6d421d; 
-       border-bottom: 1px dashed #bba38a; 
-       font-weight: normal; 
-       margin-top: 40px; 
-       font-style: italic; 
-       padding-bottom: 5px;
-     }
+    .action-btn {
+      background: #e4d7c4;
+      border: 1px solid #c8b9a6;
+      color: #5a381a;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 0.8em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      font-weight: bold;
+    }
+    .action-btn:hover {
+      background: #d4c4b2;
+    }
+    .action-btn.active {
+      background: #5a381a;
+      color: #f6efe2;
+    }
+
+    h1 { 
+      text-align: center; 
+      border-bottom: 2px solid #2b221a; 
+      padding-bottom: 15px; 
+      font-weight: normal; 
+      font-size: 2.4em; 
+      margin-top: 5px;
+      margin-bottom: 20px;
+      font-style: italic;
+      letter-spacing: 1px;
+    }
+
+    h2 { 
+      color: #6d421d; 
+      border-bottom: 1px dashed #bba38a; 
+      font-weight: normal; 
+      margin-top: 40px; 
+      font-style: italic; 
+      padding-bottom: 5px;
+    }
 
     .pantry-drawer {
-  margin-bottom: 20px;
-  background: rgba(90, 56, 26, 0.03);
-  border: 1px solid rgba(90, 56, 26, 0.15);
-  border-radius: 6px;
-  padding: 8px 12px;
-}
+      margin-bottom: 20px;
+      background: rgba(90, 56, 26, 0.03);
+      border: 1px solid rgba(90, 56, 26, 0.15);
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
 
-.pantry-toggle {
-  font-weight: bold;
-  cursor: pointer;
-  color: #2b221a;
-  user-select: none;
-}
+    .pantry-toggle {
+      font-weight: bold;
+      cursor: pointer;
+      color: #2b221a;
+      user-select: none;
+    }
 
-.pantry-content {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .pantry-content {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-.pantry-group-title {
-  font-size: 0.8em;
-  font-weight: uppercase;
-  letter-spacing: 0.05em;
-  color: #7c481d;
-  display: block;
-  margin-bottom: 6px;
-}
+    .pantry-group-title {
+      font-size: 0.8em;
+      font-weight: uppercase;
+      letter-spacing: 0.05em;
+      color: #7c481d;
+      display: block;
+      margin-bottom: 6px;
+    }
 
-.pantry-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
+    .pantry-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
 
-.pantry-chip {
-  font-size: 0.8em;
-  padding: 4px 10px;
-  border-radius: 12px;
-  border: 1px solid #bba38a;
-  background: #fdfbf7;
-  color: #35291d;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
+    .pantry-chip {
+      font-size: 0.8em;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid #bba38a;
+      background: #fdfbf7;
+      color: #35291d;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
 
-.pantry-chip.active {
-  background: #5a381a;
-  color: #fdfbf7;
-  border-color: #5a381a;
-}
+    .pantry-chip.active {
+      background: #5a381a;
+      color: #fdfbf7;
+      border-color: #5a381a;
+    }
 
     .recipe-notes-container {
-  margin-top: 24px;
-  border-top: 1px dashed #bba38a;
-  padding-top: 12px;
-}
+      margin-top: 24px;
+      border-top: 1px dashed #bba38a;
+      padding-top: 12px;
+    }
 
-.recipe-notes-container label {
-  font-weight: bold;
-  display: block;
-  font-size: 0.85rem;
-  color: #6d421d;
-  font-style: italic;
-  margin-bottom: 4px;
-}
-.recipe-card strong.section-title {
-  color: #1a130b;
-  display: block;
-  margin-bottom: 8px;
-}
-.recipe-notes-container textarea {
-  width: 100%;
-  min-height: 55px;
-  background-color: #efe7db;
-  border: 1px solid #c8b9a6;
-  border-radius: 4px;
-  color: #4e3e30;
-  font-family: inherit;
-  font-size: 0.9rem;
-  padding: 6px;
-  box-sizing: border-box;
-  resize: vertical;
-}
+    .recipe-notes-container label {
+      font-weight: bold;
+      display: block;
+      font-size: 0.85rem;
+      color: #6d421d;
+      font-style: italic;
+      margin-bottom: 4px;
+    }
 
-.recipe-notes-container textarea:focus {
-  outline: none;
-  border-color: #5a381a;
-  background-color: #f6efe2;
-}
+    .recipe-card strong.section-title, 
+    strong.section-title {
+      color: #1a130b;
+      display: block;
+      margin-bottom: 8px;
+    }
 
-     .toc { 
-       margin-bottom: 30px; 
-       padding: 15px; 
-       background-color: rgba(228, 215, 196, 0.4);
-       border: 1px solid #c8b9a6; 
-     }
-     .toc h3 { 
-       margin-top: 0; 
-       font-weight: normal; 
-       text-align: center; 
-       font-size: 1.2em; 
-       text-transform: uppercase; 
-       letter-spacing: 1.5px; 
-       margin-bottom: 15px; 
-       border-bottom: 1px solid rgba(43,34,26,0.15);
-       padding-bottom: 5px;
-     }
-     .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-     .toc-cat { font-weight: bold; color: #6d421d; text-decoration: none; display: block; margin-bottom: 5px; }
-.toc-recipes { 
-  list-style-type: square; /* Adds clean square bullet points */
-  padding-left: 20px; 
-  margin: 6px 0 8px 0; 
-  font-size: 0.95em; /* Bumped up from 0.85em */
-  border-left: none; 
-}
-.toc-grid details[open] {
-  grid-column: 1 / -1;
-  background: rgba(90, 56, 26, 0.05);
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid rgba(90, 56, 26, 0.15);
-}
+    .recipe-notes-container textarea {
+      width: 100%;
+      min-height: 55px;
+      background-color: #efe7db;
+      border: 1px solid #c8b9a6;
+      border-radius: 4px;
+      color: #4e3e30;
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 6px;
+      box-sizing: border-box;
+      resize: vertical;
+    }
 
-.toc-recipes {
-  list-style-type: square;
-  padding-left: 20px;
-  margin: 8px 0 4px 0;
-  font-size: 0.95em;
-  column-width: 220px;
-  column-gap: 24px;
-}
+    .recipe-notes-container textarea:focus {
+      outline: none;
+      border-color: #5a381a;
+      background-color: #f6efe2;
+    }
 
-.toc-recipes li {
-  margin-bottom: 4px;
-  break-inside: avoid;
-}
-.toc-recipes li {
-  margin-bottom: 4px; /* Separates the links slightly */
-}
+    .toc { 
+      margin-bottom: 30px; 
+      padding: 15px; 
+      background-color: rgba(228, 215, 196, 0.4);
+      border: 1px solid #c8b9a6; 
+    }
 
-.toc-recipes a { 
-  color: #4e3e30; 
-  text-decoration: none; 
-}
+    .toc h3 { 
+      margin-top: 0; 
+      font-weight: normal; 
+      text-align: center; 
+      font-size: 1.2em; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+      margin-bottom: 15px; 
+      border-bottom: 1px solid rgba(43,34,26,0.15);
+      padding-bottom: 5px;
+    }
 
-.toc-recipes a:hover { 
-  text-decoration: underline; 
-}
-     
-     .search-wrapper {
-       display: flex; 
-       gap: 10px; 
-       margin-bottom: 20px;
-       background: rgba(228, 215, 196, 0.3);
-       padding: 8px 12px;
-       border: 1px solid #d4c4b2;
-       border-radius: 4px;
-       align-items: center;
-     }
-     input { 
-       width: 100%; 
-       background: transparent; 
-       border: none; 
-       color: #2b221a; 
-       padding: 4px 0; 
-       font-family: inherit; 
-       font-size: 1.05em; 
-       outline: none; 
-     }
-     input::placeholder { color: #8c7a69; font-style: italic; }
-     
-     .recipe { margin-bottom: 40px; }
-     .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43, 34, 26, 0.1); padding-bottom: 8px; margin-bottom: 12px; }
-     .title { font-size: 1.4em; font-weight: bold; }
-     .rating { cursor: pointer; font-size: 1.2em; color: rgba(0, 0, 0, 0.1); }
-     .rating .active { color: #7c481d; }
-.recipe-badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  margin-bottom: 15px;
-}
+    .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+    .toc-cat { font-weight: bold; color: #6d421d; text-decoration: none; display: block; margin-bottom: 5px; }
 
-.badge {
-  font-size: 0.8em;
-  font-style: italic;
-  padding: 4px 8px;
-  border-radius: 3px;
-  display: inline-flex;
-  align-items: center;
-}
+    .toc-grid details[open] {
+      grid-column: 1 / -1;
+      background: rgba(90, 56, 26, 0.05);
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(90, 56, 26, 0.15);
+    }
 
-.badge-drink {
-  color: #5a381a;
-  background: rgba(228, 215, 196, 0.4);
-}
+    .toc-recipes {
+      list-style-type: square;
+      padding-left: 20px;
+      margin: 8px 0 4px 0;
+      font-size: 0.95em;
+      column-width: 220px;
+      column-gap: 24px;
+    }
 
-.badge-cooked {
-  color: #7c481d;
-  background: rgba(124, 72, 29, 0.1);
-}     .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
-     .ingredients-list strong { color: #1a130b; }
-     .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
-     .ingredients-list li { margin-bottom: 3px; }
-.method { 
-  margin-top: 15px; 
-  padding-top: 12px; 
-  border-top: 1px dashed rgba(43, 34, 26, 0.1); 
-  color: #35291d; 
-}
+    .toc-recipes li {
+      margin-bottom: 4px;
+      break-inside: avoid;
+    }
 
-.method-step {
-  margin-top:0;
-  margin-bottom: 1.25rem;
-  line-height: 1.6;
-}
+    .toc-recipes a { 
+      color: #4e3e30; 
+      text-decoration: none; 
+    }
 
-.method-step:last-child {
-  margin-bottom: 0;
-}     #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px;}
+    .toc-recipes a:hover { 
+      text-decoration: underline; 
+    }
 
-     #back-to-top {
-       position: fixed;
-       bottom: 20px;
-       right: 20px;
-       background: #5a381a;
-       color: #f6efe2;
-       border: none;
-       border-radius: 50%;
-       width: 45px;
-       height: 45px;
-       font-size: 1.2em;
-       cursor: pointer;
-       display: none;
-       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-       z-index: 1000;
-     }
+    .search-wrapper {
+      display: flex; 
+      gap: 10px; 
+      margin-bottom: 20px;
+      background: rgba(228, 215, 196, 0.3);
+      padding: 8px 12px;
+      border: 1px solid #d4c4b2;
+      border-radius: 4px;
+      align-items: center;
+    }
+
+    input { 
+      width: 100%; 
+      background: transparent; 
+      border: none; 
+      color: #2b221a; 
+      padding: 4px 0; 
+      font-family: inherit; 
+      font-size: 1.05em; 
+      outline: none; 
+    }
+    input::placeholder { color: #8c7a69; font-style: italic; }
+
+    .recipe { margin-bottom: 40px; }
+    .header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(43, 34, 26, 0.1); padding-bottom: 8px; margin-bottom: 12px; }
+    .title { font-size: 1.4em; font-weight: bold; }
+    .rating { cursor: pointer; font-size: 1.2em; color: rgba(0, 0, 0, 0.1); }
+    .rating .active { color: #7c481d; }
+
+    .recipe-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+
+    .badge {
+      font-size: 0.8em;
+      font-style: italic;
+      padding: 4px 8px;
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .badge-drink {
+      color: #5a381a;
+      background: rgba(228, 215, 196, 0.4);
+    }
+
+    .badge-cooked {
+      color: #7c481d;
+      background: rgba(124, 72, 29, 0.1);
+    }
+
+    .ingredients-list { margin: 12px 0; font-size: 0.95em; color: #3b2f23; }
+    .ingredients-list ul { margin-top: 4px; padding-left: 18px; list-style-type: square; }
+    .ingredients-list li { margin-bottom: 3px; }
+
+    .method { 
+      margin-top: 15px; 
+      padding-top: 12px; 
+      border-top: 1px dashed rgba(43, 34, 26, 0.1); 
+      color: #35291d; 
+    }
+
+    .method-step {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .method-step:last-child {
+      margin-bottom: 0;
+    }
+
+    #loader { text-align: center; font-style: italic; color: #6d421d; margin-bottom: 20px; }
+
+    #back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #5a381a;
+      color: #f6efe2;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 1.2em;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
     .next-up-panel {
-  background: rgba(90, 56, 26, 0.08);
-  border: 1px solid #5a381a;
-  border-radius: 4px;
-  padding: 12px 16px;
-  margin-bottom: 25px;
-}
+      background: rgba(90, 56, 26, 0.08);
+      border: 1px solid #5a381a;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-bottom: 25px;
+    }
 
-.next-up-panel h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.1em;
-  color: #5a381a;
-  font-style: italic;
-}
+    .next-up-panel h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+      color: #5a381a;
+      font-style: italic;
+    }
 
-.next-up-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+    .next-up-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-.next-up-item {
-  background: #f6efe2;
-  border: 1px solid #c8b9a6;
-  padding: 4px 10px;
-  border-radius: 3px;
-  font-size: 0.85em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    .next-up-item {
+      background: #f6efe2;
+      border: 1px solid #c8b9a6;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 0.85em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.next-up-item a {
-  color: #2b221a;
-  text-decoration: none;
-  font-weight: bold;
-}
+    .next-up-item a {
+      color: #2b221a;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-.next-up-remove {
-  color: #8b0000;
-  cursor: pointer;
-  font-weight: bold;
-  border: none;
-  background: none;
-  padding: 0 2px;
-}
+    .next-up-remove {
+      color: #8b0000;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      background: none;
+      padding: 0 2px;
+    }
   </style>
 </head>
 <body>
@@ -412,7 +415,7 @@
       <div class="action-group">
         <button class="action-btn" onclick="openAddModal()">+ Add Recipe</button>
         <button class="action-btn" onclick="dealRandomRecipe(false)">Recipe Roulette</button>
-        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger ★</button>
+        <button class="action-btn" onclick="dealRandomRecipe(true)">Pick a Banger</button>
         <button id="forgottenGemsBtn" class="action-btn" onclick="toggleForgottenGems()">Forgotten Gems: OFF</button>
       </div>
       <div class="action-group">
@@ -420,23 +423,22 @@
         <button id="wakeLockBtn" class="action-btn" onclick="toggleWakeLock()">Keep Awake: OFF</button>
       </div>
     </div>
-    <h1>Paul's Recipes (for cooking)</h1>    
+
+    <h1>Paul's Recipes (for cooking)</h1>   
+
     <div class="search-wrapper">
       <input type="text" id="search" placeholder="Search by ingredient or name..." oninput="render()">
       <button class="action-btn" onclick="resetMatrix()" style="background: #d4c4b2;">Reset</button>
     </div>
-    
-    <div class="pantry-bar" id="pantry-bar">
-      <span style="font-size: 0.85em; font-style: italic; margin-right: 5px;">Pantry:</span>
-      <span id="pantry-chips-container" style="display: flex; flex-wrap: wrap; gap: 6px;">Loading pantry...</span>
-    </div>
+
+    <div id="pantry-drawer-container"></div>
 
     <div id="loader">Making myself decent...</div>
     <div id="toc-container"></div>
     <div id="feed"></div>
   </div>
 
-  <button id="back-to-top" onclick="scrollToTop()">↑</button>
+  <button id="back-to-top" onclick="scrollToTop()">^</button>
 
   <!-- Add Recipe Modal -->
   <div id="addModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
@@ -454,49 +456,94 @@
 <script>
   const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTTS8a7CIHfWzkLNQrthY39BrbZ4yuwa37ec5qAZYbZTYoExI52g2BRUqPV_Ey9nRJ8oEhILPJ6XZF-/pub?gid=0&single=true&output=csv";
   const INSERT_API_URL = "https://script.google.com/macros/s/AKfycbz-eWkTyhE0JpGl8GxvVvXllX3Y4NJpqfKRYzA9VnbQ0TQGmhOC70VYBRH_fiOyFdcr/exec";
+
   let db = [];
   let nextUp = JSON.parse(localStorage.getItem('nextUpRecipes') || '[]');
-let filterForgottenGems = false;
+  let selectedPantry = JSON.parse(localStorage.getItem('pantryList') || '[]');
+  let checkedShopping = JSON.parse(localStorage.getItem('checkedShopping') || '[]');
+  let filterForgottenGems = false;
+  let wakeLock = null;
+  let sortByMostCooked = false;
 
   const PANTRY_CATEGORIES = {
-  "Produce": ["Garlic", "Onions", "Lemons", "Limes", "Fresh Chillies", "Ginger"],
-  "Protein & Dairy": ["Eggs", "Unsalted Butter", "Milk", "Parmesan", "Cheddar", "Chicken Breast"],
-  "Storecupboard": ["Passata", "Soy Sauce", "Olive Oil", "Vegetable Oil", "Rice", "Pasta"],
-  "Spices & Seasoning": ["Coarse Sea Salt", "Black Pepper", "Smoked Paprika", "Cumin", "Chilli Flakes", "Garam Masala"],
-  "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
-};
-  
-function toggleForgottenGems() {
-  filterForgottenGems = !filterForgottenGems;
-  const btn = document.getElementById('forgottenGemsBtn');
-  if (filterForgottenGems) {
-    btn.textContent = 'Forgotten Gems: ON';
-    btn.classList.add('active');
-  } else {
-    btn.textContent = 'Forgotten Gems: OFF';
-    btn.classList.remove('active');
-  }
-  render();
-}
-function toggleNextUp(id) {
-  const index = nextUp.indexOf(String(id));
-  if (index > -1) {
-    nextUp.splice(index, 1);
-  } else {
-    nextUp.push(String(id));
-  }
-  localStorage.setItem('nextUpRecipes', JSON.stringify(nextUp));
-  render();
-}
+    "Produce": ["Garlic", "Onions", "Lemons", "Limes", "Fresh Chillies", "Ginger"],
+    "Protein & Dairy": ["Eggs", "Unsalted Butter", "Milk", "Parmesan", "Cheddar", "Chicken Breast"],
+    "Storecupboard": ["Passata", "Soy Sauce", "Olive Oil", "Vegetable Oil", "Rice", "Pasta"],
+    "Spices & Seasoning": ["Coarse Sea Salt", "Black Pepper", "Smoked Paprika", "Cumin", "Chilli Flakes", "Garam Masala"],
+    "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
+  };
 
-function clearNextUp() {
-  nextUp = [];
-  localStorage.removeItem('nextUpRecipes');
-  render();
-}
-  let wakeLock = null;
-  let selectedPantry = [];
-  let sortByMostCooked = false;
+  function renderPantryDrawer() {
+    return `
+      <details class="pantry-drawer">
+        <summary class="pantry-toggle">Pantry Quick-Add</summary>
+        <div class="pantry-content">
+          ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
+            <div class="pantry-group">
+              <span class="pantry-group-title">${category}</span>
+              <div class="pantry-chips">
+                ${items.map(item => `
+                  <button class="pantry-chip ${selectedPantry.includes(item.toLowerCase()) ? 'active' : ''}" 
+                          onclick="togglePantry('${item.toLowerCase().replace(/'/g, "\\'")}')">
+                    ${item}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </details>
+    `;
+  }
+
+  function generatePantryChips() {
+    const container = document.getElementById('pantry-drawer-container');
+    if (container) {
+      container.innerHTML = renderPantryDrawer();
+    }
+  }
+
+  function togglePantry(item) {
+    const index = selectedPantry.indexOf(item);
+    if (index > -1) {
+      selectedPantry.splice(index, 1);
+    } else {
+      selectedPantry.push(item);
+    }
+    localStorage.setItem('pantryList', JSON.stringify(selectedPantry));
+    generatePantryChips();
+    render();
+  }
+
+  function toggleForgottenGems() {
+    filterForgottenGems = !filterForgottenGems;
+    const btn = document.getElementById('forgottenGemsBtn');
+    if (filterForgottenGems) {
+      btn.textContent = 'Forgotten Gems: ON';
+      btn.classList.add('active');
+    } else {
+      btn.textContent = 'Forgotten Gems: OFF';
+      btn.classList.remove('active');
+    }
+    render();
+  }
+
+  function toggleNextUp(id) {
+    const index = nextUp.indexOf(String(id));
+    if (index > -1) {
+      nextUp.splice(index, 1);
+    } else {
+      nextUp.push(String(id));
+    }
+    localStorage.setItem('nextUpRecipes', JSON.stringify(nextUp));
+    render();
+  }
+
+  function clearNextUp() {
+    nextUp = [];
+    localStorage.removeItem('nextUpRecipes');
+    render();
+  }
 
   async function toggleWakeLock() {
     const btn = document.getElementById('wakeLockBtn');
@@ -515,7 +562,7 @@ function clearNextUp() {
       } catch (err) {}
     }
   }
-  
+
   function toggleMostCooked() {
     sortByMostCooked = !sortByMostCooked;
     const btn = document.getElementById('sortMostCookedBtn');
@@ -528,7 +575,7 @@ function clearNextUp() {
     }
     render();
   }
-  
+
   function openAddModal() {
     document.getElementById('addModal').style.display = 'flex';
   }
@@ -556,7 +603,6 @@ function clearNextUp() {
     if (Array.isArray(recipe.ingredients)) {
       ingredientsStr = recipe.ingredients.join('|');
     }
-
 
     const params = new URLSearchParams({
       name: recipe.name || recipe.title || 'Untitled Recipe',
@@ -626,41 +672,16 @@ function clearNextUp() {
     }
   }
 
-  function generatePantryChips() {
-    const curatedPantry = [
-      'sweet potato', 'harissa', 'chickpeas', 'halloumi', 
-      'mince', 'spinach', 'pasta', 'noodles', 'rice', 
-      'chicken', 'passata', 'eggs'
-    ];
-
-    const container = document.getElementById('pantry-chips-container');
-    container.innerHTML = curatedPantry.map(item => `
-      <span class="pantry-chip ${selectedPantry.includes(item) ? 'selected' : ''}" onclick="togglePantry('${item}')">
-        ${item.charAt(0).toUpperCase() + item.slice(1)}
-      </span>
-    `).join('');
-  }
-
-  function togglePantry(item) {
-    const index = selectedPantry.indexOf(item);
-    if (index > -1) {
-      selectedPantry.splice(index, 1);
-    } else {
-      selectedPantry.push(item);
-    }
-    generatePantryChips();
-    render();
-  }
-
   function dealRandomRecipe(bangersOnly) {
     if (db.length === 0) return;
     let pool = bangersOnly ? db.filter(r => r.rating >= 4) : db;
     if (pool.length === 0) pool = db;
-    
+
     const random = pool[Math.floor(Math.random() * pool.length)];
-    
+
     document.getElementById('search').value = random.name;
     selectedPantry = [];
+    localStorage.setItem('pantryList', JSON.stringify(selectedPantry));
     generatePantryChips();
     render();
     const target = document.getElementById(`rec-${random.id}`);
@@ -672,6 +693,7 @@ function clearNextUp() {
   function resetMatrix() {
     document.getElementById('search').value = '';
     selectedPantry = [];
+    localStorage.setItem('pantryList', JSON.stringify(selectedPantry));
     generatePantryChips();
     render();
     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -708,29 +730,6 @@ function clearNextUp() {
     return ret;
   }
 
-  function renderPantryDrawer() {
-  return `
-    <details class="pantry-drawer">
-      <summary class="pantry-toggle">Pantry Quick-Add</summary>
-      <div class="pantry-content">
-        ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
-          <div class="pantry-group">
-            <span class="pantry-group-title">${category}</span>
-            <div class="pantry-chips">
-              ${items.map(item => `
-                <button class="pantry-chip ${pantryList.includes(item) ? 'active' : ''}" 
-                        onclick="togglePantryItem('${item.replace(/'/g, "\\'")}')">
-                  ${item}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </details>
-  `;
-}
-  
   function fetchRecipes() {
     fetch(CSV_URL)
       .then(response => response.text())
@@ -775,176 +774,170 @@ function clearNextUp() {
       }).catch(err => console.error('Rating sync error:', err));
     }
   };
-let checkedShopping = JSON.parse(localStorage.getItem('checkedShopping') || '[]');
 
-function handleShopCheck(input) {
-  const label = input.closest('label');
-  const item = label.dataset.item;
-  const span = input.nextElementSibling;
-  const toBuyList = document.getElementById('to-buy-list');
-  const alreadyHaveList = document.getElementById('already-have-list');
-  const alreadyHaveDetails = document.getElementById('already-have-details');
+  function handleShopCheck(input) {
+    const label = input.closest('label');
+    const item = label.dataset.item;
+    const span = input.nextElementSibling;
+    const toBuyList = document.getElementById('to-buy-list');
+    const alreadyHaveList = document.getElementById('already-have-list');
+    const alreadyHaveDetails = document.getElementById('already-have-details');
 
-  if (input.checked) {
-    if (!checkedShopping.includes(item)) checkedShopping.push(item);
-    span.style.textDecoration = 'line-through';
-    span.style.opacity = '0.5';
-    alreadyHaveList.appendChild(label);
-  } else {
-    checkedShopping = checkedShopping.filter(i => i !== item);
-    span.style.textDecoration = 'none';
-    span.style.opacity = '1';
-    toBuyList.appendChild(label);
-  }
-
-  localStorage.setItem('checkedShopping', JSON.stringify(checkedShopping));
-
-  const haveCount = alreadyHaveList.children.length;
-  const toBuyCount = toBuyList.children.length;
-
-  document.getElementById('have-count').textContent = haveCount;
-  document.getElementById('shop-total-count').textContent = toBuyCount;
-  alreadyHaveDetails.hidden = (haveCount === 0);
-}
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  const day = d.getDate().toString().padStart(2, '0');
-  const month = d.toLocaleString('en-GB', { month: 'short' });
-  const year = d.getFullYear().toString().slice(-2);
-  return `${day} ${month} '${year}`;
-}  
-function render() {
-  const query = document.getElementById('search').value.toLowerCase();
-  const feed = document.getElementById('feed');
-  const tocContainer = document.getElementById('toc-container');
-  
-  // Calculate date string for 21 days ago (YYYY-MM-DD)
-  const twentyOneDaysAgo = new Date(Date.now() - (21 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
-
-  const filtered = db.filter(r => {
-    const matchesQuery = r.name.toLowerCase().includes(query) || 
-                         r.ingredients.some(i => i.toLowerCase().includes(query));
-    
-    const matchesPantry = selectedPantry.every(p => 
-      r.ingredients.some(i => i.toLowerCase().includes(p))
-    );
-
-    let matchesForgotten = true;
-    if (filterForgottenGems) {
-      const isOld = !r.lastMade || r.lastMade < twentyOneDaysAgo;
-      matchesForgotten = r.timesMade > 0 && isOld;
+    if (input.checked) {
+      if (!checkedShopping.includes(item)) checkedShopping.push(item);
+      span.style.textDecoration = 'line-through';
+      span.style.opacity = '0.5';
+      alreadyHaveList.appendChild(label);
+    } else {
+      checkedShopping = checkedShopping.filter(i => i !== item);
+      span.style.textDecoration = 'none';
+      span.style.opacity = '1';
+      toBuyList.appendChild(label);
     }
 
-    return matchesQuery && matchesPantry && matchesForgotten;
-  });
+    localStorage.setItem('checkedShopping', JSON.stringify(checkedShopping));
 
-  if (filtered.length === 0) {
+    const haveCount = alreadyHaveList.children.length;
+    const toBuyCount = toBuyList.children.length;
+
+    document.getElementById('have-count').textContent = haveCount;
+    document.getElementById('shop-total-count').textContent = toBuyCount;
+    alreadyHaveDetails.hidden = (haveCount === 0);
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = d.toLocaleString('en-GB', { month: 'short' });
+    const year = d.getFullYear().toString().slice(-2);
+    return `${day} ${month} '${year}`;
+  }
+
+  function render() {
+    const query = document.getElementById('search').value.toLowerCase();
+    const feed = document.getElementById('feed');
+    const tocContainer = document.getElementById('toc-container');
+
+    const twentyOneDaysAgo = new Date(Date.now() - (21 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0];
+
+    const filtered = db.filter(r => {
+      const matchesQuery = r.name.toLowerCase().includes(query) || 
+                           r.ingredients.some(i => i.toLowerCase().includes(query));
+
+      const matchesPantry = selectedPantry.every(p => 
+        r.ingredients.some(i => i.toLowerCase().includes(p))
+      );
+
+      let matchesForgotten = true;
+      if (filterForgottenGems) {
+        const isOld = !r.lastMade || r.lastMade < twentyOneDaysAgo;
+        matchesForgotten = r.timesMade > 0 && isOld;
+      }
+
+      return matchesQuery && matchesPantry && matchesForgotten;
+    });
+
+    if (filtered.length === 0) {
       tocContainer.innerHTML = '';
       feed.innerHTML = "<p style='text-align:center; font-style:italic;'>No recipes found.</p>";
       return;
-  }
+    }
 
-  if (sortByMostCooked) {
-    filtered.sort((a, b) => b.timesMade - a.timesMade);
-  }
+    if (sortByMostCooked) {
+      filtered.sort((a, b) => b.timesMade - a.timesMade);
+    }
 
-  const grouped = {};
-  filtered.forEach(r => {
-    if (!grouped[r.category]) grouped[r.category] = [];
-    grouped[r.category].push(r);
-  });
-
-  const categories = Object.keys(grouped).sort();
-  
-// 1. Build Next Up box with divided Shopping List & "Already Have" bundle
-  let nextUpHTML = '';
-  if (nextUp.length > 0) {
-    const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
-
-    // Helper to clean quantities & measurements
-    const cleanIngredient = (str) => {
-      return str
-        .replace(/^\s*[\d\/\.\-\s]+(?:\s*(?:tsp|tbsp|g|kg|ml|l|oz|lbs?|cups?|cloves?|cans?|tins?|handfuls?|pinches?|bunches?|tbsp\.|tsp\.)\b)?(?:\s+of\b)?\s*/i, '')
-        .replace(/^(?:pinch|handful)\s+of\s+/i, '')
-        .trim();
-    };
-
-    // Extract, clean, and deduplicate ingredients
-    const seen = new Set();
-    const shoppingList = [];
-    
-    pinnedRecipes.forEach(r => {
-      if (Array.isArray(r.ingredients)) {
-        r.ingredients.forEach(i => {
-          let clean = cleanIngredient(i);
-          if (clean) {
-            clean = clean.charAt(0).toUpperCase() + clean.slice(1);
-            const lower = clean.toLowerCase();
-            if (!seen.has(lower)) {
-              seen.add(lower);
-              shoppingList.push(clean);
-            }
-          }
-        });
-      }
+    const grouped = {};
+    filtered.forEach(r => {
+      if (!grouped[r.category]) grouped[r.category] = [];
+      grouped[r.category].push(r);
     });
-    shoppingList.sort((a, b) => a.localeCompare(b));
 
-    const toBuyList = shoppingList.filter(i => !checkedShopping.includes(i));
-    const alreadyHaveList = shoppingList.filter(i => checkedShopping.includes(i));
+    const categories = Object.keys(grouped).sort();
 
-    nextUpHTML = `
-      <div class="next-up-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-          <h3 style="margin:0;">Next Up This Week (${pinnedRecipes.length})</h3>
-          <button class="action-btn" onclick="clearNextUp()" style="font-size: 0.7em; padding: 2px 6px; background:#d4c4b2;">Clear All</button>
-        </div>
-        <div class="next-up-list" style="margin-bottom: 10px;">
-          ${pinnedRecipes.map(r => `
-            <div class="next-up-item">
-              <a href="#rec-${r.id}">${r.name}</a>
-              <button class="next-up-remove" onclick="toggleNextUp('${r.id}')">x</button>
-            </div>
-          `).join('')}
-        </div>
+    let nextUpHTML = '';
+    if (nextUp.length > 0) {
+      const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
 
-        <details style="border-top: 1px dashed #c8b9a6; padding-top: 8px; margin-top: 8px;">
-          <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 0.9em;">
-            Shopping List (<span id="shop-total-count">${toBuyList.length}</span> needed)
-          </summary>
-          
-          <!-- Unticked Items -->
-          <div id="to-buy-list" style="margin: 8px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
-            ${toBuyList.map(item => `
-              <label data-item="${item}" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
-                <input type="checkbox" style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
-                <span>${item}</span>
-              </label>
+      const cleanIngredient = (str) => {
+        return str
+          .replace(/^\s*[\d\/\.\-\s]+(?:\s*(?:tsp|tbsp|g|kg|ml|l|oz|lbs?|cups?|cloves?|cans?|tins?|handfuls?|pinches?|bunches?|tbsp\.|tsp\.)\b)?(?:\s+of\b)?\s*/i, '')
+          .replace(/^(?:pinch|handful)\s+of\s+/i, '')
+          .trim();
+      };
+
+      const seen = new Set();
+      const shoppingList = [];
+
+      pinnedRecipes.forEach(r => {
+        if (Array.isArray(r.ingredients)) {
+          r.ingredients.forEach(i => {
+            let clean = cleanIngredient(i);
+            if (clean) {
+              clean = clean.charAt(0).toUpperCase() + clean.slice(1);
+              const lower = clean.toLowerCase();
+              if (!seen.has(lower)) {
+                seen.add(lower);
+                shoppingList.push(clean);
+              }
+            }
+          });
+        }
+      });
+      shoppingList.sort((a, b) => a.localeCompare(b));
+
+      const toBuyList = shoppingList.filter(i => !checkedShopping.includes(i));
+      const alreadyHaveList = shoppingList.filter(i => checkedShopping.includes(i));
+
+      nextUpHTML = `
+        <div class="next-up-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+            <h3 style="margin:0;">Next Up This Week (${pinnedRecipes.length})</h3>
+            <button class="action-btn" onclick="clearNextUp()" style="font-size: 0.7em; padding: 2px 6px; background:#d4c4b2;">Clear All</button>
+          </div>
+          <div class="next-up-list" style="margin-bottom: 10px;">
+            ${pinnedRecipes.map(r => `
+              <div class="next-up-item">
+                <a href="#rec-${r.id}">${r.name}</a>
+                <button class="next-up-remove" onclick="toggleNextUp('${r.id}')">x</button>
+              </div>
             `).join('')}
           </div>
 
-          <!-- Already Have Bundle -->
-          <details id="already-have-details" style="margin-top: 10px; border-top: 1px italic #d4c4b2; padding-top: 6px;" ${alreadyHaveList.length > 0 ? '' : 'hidden'}>
-            <summary style="cursor: pointer; font-size: 0.8em; font-style: italic; color: #7c481d;">
-              Already Have (<span id="have-count">${alreadyHaveList.length}</span>)
+          <details style="border-top: 1px dashed #c8b9a6; padding-top: 8px; margin-top: 8px;">
+            <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 0.9em;">
+              Shopping List (<span id="shop-total-count">${toBuyList.length}</span> needed)
             </summary>
-            <div id="already-have-list" style="margin: 6px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
-              ${alreadyHaveList.map(item => `
+
+            <div id="to-buy-list" style="margin: 8px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
+              ${toBuyList.map(item => `
                 <label data-item="${item}" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
-                  <input type="checkbox" checked style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
-                  <span style="text-decoration: line-through; opacity: 0.5;">${item}</span>
+                  <input type="checkbox" style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
+                  <span>${item}</span>
                 </label>
               `).join('')}
             </div>
-          </details>
-        </details>
-      </div>
-    `;
-  }
 
-// 2. Put Next Up FIRST inside the Menu box, then build collapsible categories
+            <details id="already-have-details" style="margin-top: 10px; border-top: 1px italic #d4c4b2; padding-top: 6px;" ${alreadyHaveList.length > 0 ? '' : 'hidden'}>
+              <summary style="cursor: pointer; font-size: 0.8em; font-style: italic; color: #7c481d;">
+                Already Have (<span id="have-count">${alreadyHaveList.length}</span>)
+              </summary>
+              <div id="already-have-list" style="margin: 6px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
+                ${alreadyHaveList.map(item => `
+                  <label data-item="${item}" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
+                    <input type="checkbox" checked style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
+                    <span style="text-decoration: line-through; opacity: 0.5;">${item}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </details>
+          </details>
+        </div>
+      `;
+    }
+
     if (query === '' && selectedPantry.length === 0 && !sortByMostCooked && !filterForgottenGems) {
       tocContainer.innerHTML = nextUpHTML + `
         <div class="toc">
@@ -966,70 +959,73 @@ function render() {
         </div>
       `;
     } else {
-      // Keep Next Up visible even when searching
       tocContainer.innerHTML = nextUpHTML;
     }
 
-  // 3. Render the recipe feed
-  feed.innerHTML = categories.map(cat => `
-      <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
-      ${grouped[cat].map(r => `
-          <div class="recipe" id="rec-${r.id}">
-              <div class="header">
-                  <div class="title">${r.name}</div>
-                  <div class="rating">
-                      ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
-                  </div>
-              </div>
-              
-<div class="recipe-badges">
-  ${r.drink ? `<span class="badge badge-drink">🍷 Pour: ${r.drink}</span>` : ''}
-  
-  <span class="badge badge-cooked">
-    ${Number(r.timesMade) > 0 ? `🔥 Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}
-  </span>
+    feed.innerHTML = categories.map(cat => `
+        <h2 id="cat-${cat.replace(/\s+/g, '-')}">${cat}</h2>
+        ${grouped[cat].map(r => `
+            <div class="recipe" id="rec-${r.id}">
+                <div class="header">
+                    <div class="title">${r.name}</div>
+                    <div class="rating">
+                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">*</span>`).join('')}
+                    </div>
+                </div>
 
-  <button class="action-btn ${nextUp.includes(String(r.id)) ? 'active' : ''}" 
-          style="font-size: 0.75em; padding: 4px 8px;" 
-          onclick="toggleNextUp('${r.id}')">
-    ${nextUp.includes(String(r.id)) ? 'Remove Plan' : '+ Plan'}
-  </button>
+                <div class="recipe-badges">
+                  ${r.drink ? `<span class="badge badge-drink">Pour: ${r.drink}</span>` : ''}
 
-  <button id="made-btn-${r.id}" 
-          class="action-btn" 
-          style="font-size: 0.75em; padding: 4px 8px;" 
-          onclick="logMade('${r.id}')">
-    I Made This 🍳
-  </button>
-</div>
-              <div class="ingredients-list">
-<strong class="section-title">Ingredients:</strong>                  <ul>
-                      ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
+                  <span class="badge badge-cooked">
+                    ${Number(r.timesMade) > 0 ? `Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}
+                  </span>
+
+                  <button class="action-btn ${nextUp.includes(String(r.id)) ? 'active' : ''}" 
+                          style="font-size: 0.75em; padding: 4px 8px;" 
+                          onclick="toggleNextUp('${r.id}')">
+                    ${nextUp.includes(String(r.id)) ? 'Remove Plan' : '+ Plan'}
+                  </button>
+
+                  <button id="made-btn-${r.id}" 
+                          class="action-btn" 
+                          style="font-size: 0.75em; padding: 4px 8px;" 
+                          onclick="logMade('${r.id}')">
+                    I Made This
+                  </button>
+                </div>
+
+                <div class="ingredients-list">
+                  <strong class="section-title">Ingredients:</strong>
+                  <ul>
+                    ${r.ingredients.map(i => `<li>${i.trim()}</li>`).join('')}
                   </ul>
-              </div>
-<div class="method">
-<strong class="section-title">Method:</strong>  ${(() => {
-    if (!r.method) return '';
-    const steps = r.method
-      .split(/(?=\b\d+\.\s*)|\n+/)
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+                </div>
 
-    return steps.map(step => `<p class="method-step">${step}</p>`).join('');
-  })()}
-</div>             <div class="recipe-notes-container">
-                <label>Chef's Notes:</label>
-                <textarea 
-                  onchange="saveRecipeNotes('${r.id}', this.value)"
-                >${r.notes || ''}</textarea>
-              </div>
-          </div>
-      `).join('')}
-  `).join('');
-}
+                <div class="method">
+                  <strong class="section-title">Method:</strong>
+                  ${(() => {
+                    if (!r.method) return '';
+                    const steps = r.method
+                      .split(/(?=\b\d+\.\s*)|\n+/)
+                      .map(s => s.trim())
+                      .filter(s => s.length > 0);
+
+                    return steps.map(step => `<p class="method-step">${step}</p>`).join('');
+                  })()}
+                </div>
+
+                <div class="recipe-notes-container">
+                  <label>Chef's Notes:</label>
+                  <textarea onchange="saveRecipeNotes('${r.id}', this.value)">${r.notes || ''}</textarea>
+                </div>
+            </div>
+        `).join('')}
+    `).join('');
+  }
 
   fetchRecipes();
-  
 </script>
 </body>
 </html>
+
+```
