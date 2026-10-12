@@ -200,7 +200,27 @@
   font-size: 0.95em; /* Bumped up from 0.85em */
   border-left: none; 
 }
+.toc-grid details[open] {
+  grid-column: 1 / -1;
+  background: rgba(90, 56, 26, 0.05);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(90, 56, 26, 0.15);
+}
 
+.toc-recipes {
+  list-style-type: square;
+  padding-left: 20px;
+  margin: 8px 0 4px 0;
+  font-size: 0.95em;
+  column-width: 220px;
+  column-gap: 24px;
+}
+
+.toc-recipes li {
+  margin-bottom: 4px;
+  break-inside: avoid;
+}
 .toc-recipes li {
   margin-bottom: 4px; /* Separates the links slightly */
 }
