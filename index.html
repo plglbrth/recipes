@@ -633,7 +633,38 @@ function clearNextUp() {
       }).catch(err => console.error('Rating sync error:', err));
     }
   };
+let checkedShopping = JSON.parse(localStorage.getItem('checkedShopping') || '[]');
 
+function handleShopCheck(input) {
+  const label = input.closest('label');
+  const item = label.dataset.item;
+  const span = input.nextElementSibling;
+  const toBuyList = document.getElementById('to-buy-list');
+  const alreadyHaveList = document.getElementById('already-have-list');
+  const alreadyHaveDetails = document.getElementById('already-have-details');
+
+  if (input.checked) {
+    if (!checkedShopping.includes(item)) checkedShopping.push(item);
+    span.style.textDecoration = 'line-through';
+    span.style.opacity = '0.5';
+    alreadyHaveList.appendChild(label);
+  } else {
+    checkedShopping = checkedShopping.filter(i => i !== item);
+    span.style.textDecoration = 'none';
+    span.style.opacity = '1';
+    toBuyList.appendChild(label);
+  }
+
+  localStorage.setItem('checkedShopping', JSON.stringify(checkedShopping));
+
+  const haveCount = alreadyHaveList.children.length;
+  const toBuyCount = toBuyList.children.length;
+
+  document.getElementById('have-count').textContent = haveCount;
+  document.getElementById('shop-total-count').textContent = toBuyCount;
+  alreadyHaveDetails.hidden = (haveCount === 0);
+}
+  
 function render() {
   const query = document.getElementById('search').value.toLowerCase();
   const feed = document.getElementById('feed');
@@ -677,12 +708,12 @@ function render() {
 
   const categories = Object.keys(grouped).sort();
 
-// 1. Build the Next Up box with Interactive Shopping Checklist
+// 1. Build Next Up box with divided Shopping List & "Already Have" bundle
   let nextUpHTML = '';
   if (nextUp.length > 0) {
     const pinnedRecipes = db.filter(r => nextUp.includes(String(r.id)));
 
-    // Helper function to strip quantities and measurements
+    // Helper to clean quantities & measurements
     const cleanIngredient = (str) => {
       return str
         .replace(/^\s*[\d\/\.\-\s]+(?:\s*(?:tsp|tbsp|g|kg|ml|l|oz|lbs?|cups?|cloves?|cans?|tins?|handfuls?|pinches?|bunches?|tbsp\.|tsp\.)\b)?(?:\s+of\b)?\s*/i, '')
@@ -711,6 +742,9 @@ function render() {
     });
     shoppingList.sort((a, b) => a.localeCompare(b));
 
+    const toBuyList = shoppingList.filter(i => !checkedShopping.includes(i));
+    const alreadyHaveList = shoppingList.filter(i => checkedShopping.includes(i));
+
     nextUpHTML = `
       <div class="next-up-panel">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
@@ -728,16 +762,33 @@ function render() {
 
         <details style="border-top: 1px dashed #c8b9a6; padding-top: 8px; margin-top: 8px;">
           <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 0.9em;">
-            Shopping List (${shoppingList.length} items)
+            Shopping List (<span id="shop-total-count">${toBuyList.length}</span> needed)
           </summary>
-          <div style="margin: 8px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
-            ${shoppingList.map(item => `
-              <label style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
-                <input type="checkbox" style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="this.nextElementSibling.style.textDecoration = this.checked ? 'line-through' : 'none'; this.nextElementSibling.style.opacity = this.checked ? '0.5' : '1';">
+          
+          <!-- Unticked Items -->
+          <div id="to-buy-list" style="margin: 8px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
+            ${toBuyList.map(item => `
+              <label data-item="${item}" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
+                <input type="checkbox" style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
                 <span>${item}</span>
               </label>
             `).join('')}
           </div>
+
+          <!-- Already Have Bundle -->
+          <details id="already-have-details" style="margin-top: 10px; border-top: 1px italic #d4c4b2; padding-top: 6px;" ${alreadyHaveList.length > 0 ? '' : 'hidden'}>
+            <summary style="cursor: pointer; font-size: 0.8em; font-style: italic; color: #7c481d;">
+              Already Have (<span id="have-count">${alreadyHaveList.length}</span>)
+            </summary>
+            <div id="already-have-list" style="margin: 6px 0 0 4px; font-size: 0.85em; color: #3b2f23; display: flex; flex-direction: column; gap: 6px;">
+              ${alreadyHaveList.map(item => `
+                <label data-item="${item}" style="display: flex; align-items: center; justify-content: flex-start; gap: 8px; cursor: pointer; user-select: none; width: fit-content;">
+                  <input type="checkbox" checked style="width: auto; margin: 0; accent-color: #5a381a; cursor: pointer;" onchange="handleShopCheck(this)">
+                  <span style="text-decoration: line-through; opacity: 0.5;">${item}</span>
+                </label>
+              `).join('')}
+            </div>
+          </details>
         </details>
       </div>
     `;
