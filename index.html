@@ -13,6 +13,7 @@
          radial-gradient(circle at 10% 85%, rgba(0,0,0,0.08) 2px, transparent 200px);
        color: #2b221a; 
        font-family: 'Georgia', serif; 
+       font-size: 17px;
        padding: 12px; 
        line-height: 1.6; 
        box-sizing: border-box;
@@ -192,9 +193,26 @@
      }
      .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
      .toc-cat { font-weight: bold; color: #6d421d; text-decoration: none; display: block; margin-bottom: 5px; }
-     .toc-recipes { list-style: none; padding-left: 10px; margin: 0; font-size: 0.85em; border-left: 2px solid #d4c4b2; }
-     .toc-recipes a { color: #4e3e30; text-decoration: none; }
-     .toc-recipes a:hover { text-decoration: underline; }
+.toc-recipes { 
+  list-style-type: square; /* Adds clean square bullet points */
+  padding-left: 20px; 
+  margin: 6px 0 8px 0; 
+  font-size: 0.95em; /* Bumped up from 0.85em */
+  border-left: none; 
+}
+
+.toc-recipes li {
+  margin-bottom: 4px; /* Separates the links slightly */
+}
+
+.toc-recipes a { 
+  color: #4e3e30; 
+  text-decoration: none; 
+}
+
+.toc-recipes a:hover { 
+  text-decoration: underline; 
+}
      
      .search-wrapper {
        display: flex; 
@@ -794,31 +812,31 @@ function render() {
     `;
   }
 
-  // 2. Put Next Up FIRST inside the Menu box, then build collapsible categories
-  if (query === '' && selectedPantry.length === 0 && !sortByMostCooked && !filterForgottenGems) {
-    tocContainer.innerHTML = nextUpHTML + `
-      <div class="toc">
-        <h3>Menu</h3>
-        <div class="toc-grid">
-          ${categories.map(cat => `
-            <details style="margin-bottom: 8px;">
-              <summary style="cursor: pointer; font-weight: bold; color: #5a381a;">
-                ${cat} (${grouped[cat].length})
-              </summary>
-              <ul class="toc-recipes" style="margin: 4px 0 8px 12px; padding-left: 10px;">
-                ${grouped[cat].map(r => `
-                  <li><a href="#rec-${r.id}">${r.name}</a></li>
-                `).join('')}
-              </ul>
-            </details>
-          `).join('')}
+// 2. Put Next Up FIRST inside the Menu box, then build collapsible categories
+    if (query === '' && selectedPantry.length === 0 && !sortByMostCooked && !filterForgottenGems) {
+      tocContainer.innerHTML = nextUpHTML + `
+        <div class="toc">
+          <h3>Menu</h3>
+          <div class="toc-grid">
+            ${categories.map(cat => `
+              <details style="margin-bottom: 10px;">
+                <summary style="cursor: pointer; font-weight: bold; color: #5a381a; font-size: 1.05em;">
+                  ${cat} (${grouped[cat].length})
+                </summary>
+                <ul class="toc-recipes">
+                  ${grouped[cat].map(r => `
+                    <li><a href="#rec-${r.id}">${r.name}</a></li>
+                  `).join('')}
+                </ul>
+              </details>
+            `).join('')}
+          </div>
         </div>
-      </div>
-    `;
-  } else {
-    // Keep Next Up visible even when filtering or searching
-    tocContainer.innerHTML = nextUpHTML;
-  }
+      `;
+    } else {
+      // Keep Next Up visible even when searching
+      tocContainer.innerHTML = nextUpHTML;
+    }
 
   // 3. Render the recipe feed
   feed.innerHTML = categories.map(cat => `
