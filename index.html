@@ -115,29 +115,59 @@
        padding-bottom: 5px;
      }
 
-     .pantry-bar {
-       display: flex;
-       flex-wrap: wrap;
-       gap: 6px;
-       margin-bottom: 20px;
-       justify-content: center;
-       align-items: center;
-     }
-     .pantry-chip {
-       background: #efe7db;
-       border: 1px solid #d4c4b2;
-       padding: 4px 10px;
-       font-size: 0.8em;
-       cursor: pointer;
-       border-radius: 12px;
-       color: #554332;
-       transition: all 0.2s;
-     }
-     .pantry-chip.selected {
-       background: #6d421d;
-       color: #f6efe2;
-       border-color: #6d421d;
-     }
+    .pantry-drawer {
+  margin-bottom: 20px;
+  background: rgba(90, 56, 26, 0.03);
+  border: 1px solid rgba(90, 56, 26, 0.15);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.pantry-toggle {
+  font-weight: bold;
+  cursor: pointer;
+  color: #2b221a;
+  user-select: none;
+}
+
+.pantry-content {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pantry-group-title {
+  font-size: 0.8em;
+  font-weight: uppercase;
+  letter-spacing: 0.05em;
+  color: #7c481d;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.pantry-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pantry-chip {
+  font-size: 0.8em;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #bba38a;
+  background: #fdfbf7;
+  color: #35291d;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pantry-chip.active {
+  background: #5a381a;
+  color: #fdfbf7;
+  border-color: #5a381a;
+}
 
     .recipe-notes-container {
   margin-top: 24px;
@@ -491,6 +521,29 @@ function clearNextUp() {
     render();
   }
 
+  function renderPantryDrawer() {
+  return `
+    <details class="pantry-drawer">
+      <summary class="pantry-toggle">Pantry Quick-Add</summary>
+      <div class="pantry-content">
+        ${Object.entries(PANTRY_CATEGORIES).map(([category, items]) => `
+          <div class="pantry-group">
+            <span class="pantry-group-title">${category}</span>
+            <div class="pantry-chips">
+              ${items.map(item => `
+                <button class="pantry-chip ${pantryList.includes(item) ? 'active' : ''}" 
+                        onclick="togglePantryItem('${item.replace(/'/g, "\\'")}')">
+                  ${item}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </details>
+  `;
+}
+  
   function openAddModal() {
     document.getElementById('addModal').style.display = 'flex';
   }
@@ -797,6 +850,14 @@ function render() {
 
   const categories = Object.keys(grouped).sort();
 
+  const PANTRY_CATEGORIES = {
+  "Produce": ["Garlic", "Onions", "Lemons", "Limes", "Fresh Chillies", "Ginger"],
+  "Protein & Dairy": ["Eggs", "Unsalted Butter", "Milk", "Parmesan", "Cheddar", "Chicken Breast"],
+  "Storecupboard": ["Passata", "Soy Sauce", "Olive Oil", "Vegetable Oil", "Rice", "Pasta"],
+  "Spices & Seasoning": ["Coarse Sea Salt", "Black Pepper", "Smoked Paprika", "Cumin", "Chilli Flakes", "Garam Masala"],
+  "Condiments & Sauces": ["Fish Sauce", "Gochujang", "Rose Harissa", "Crispy Chilli Oil", "Mayonnaise"]
+};
+  
 // 1. Build Next Up box with divided Shopping List & "Already Have" bundle
   let nextUpHTML = '';
   if (nextUp.length > 0) {
