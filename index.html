@@ -971,7 +971,7 @@ function generatePantryChips() {
                 <div class="header">
                     <div class="title">${r.name}</div>
                     <div class="rating">
-                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">⭐</span>`).join('')}
+                        ${[1,2,3,4,5].map(s => `<span class="${s <= r.rating ? 'active' : ''}" onclick="rate('${r.id}', ${s})">★</span>`).join('')}
                     </div>
                 </div>
 
