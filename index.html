@@ -976,7 +976,7 @@ function generatePantryChips() {
                 </div>
 
                 <div class="recipe-badges">
-                  ${r.drink ? `<span class="badge badge-drink">Pour: ${r.drink}</span>` : ''}
+  ${r.drink ? `<span class="badge badge-drink">🍷 Pour: ${r.drink}</span>` : ''}
 
                   <span class="badge badge-cooked">
                     ${Number(r.timesMade) > 0 ? `Cooked: ${r.timesMade} time${r.timesMade === 1 ? '' : 's'}${r.lastMade ? ` (Last: ${formatDate(r.lastMade)})` : ''}` : 'Untested'}
